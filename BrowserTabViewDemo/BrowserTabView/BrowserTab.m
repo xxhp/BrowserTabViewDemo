@@ -34,13 +34,13 @@
     return self;
 }
 
--(id)initWithReuseIdentifier:(NSString *)reuseIdentifierIN andDelegate:(id)aDelegate
+-(id)initWithReuseIdentifier:(NSString *)aReuseIdentifier andDelegate:(id)aDelegate
 {
     self = [super initWithFrame:CGRectZero];
     if (self) {
         
         delegate = aDelegate;
-        reuseIdentifier = [reuseIdentifierIN retain];
+        reuseIdentifier = [aReuseIdentifier retain];
         self.normalTitleColor = [UIColor whiteColor];
         self.selectedTitleColor = [UIColor blackColor];
         

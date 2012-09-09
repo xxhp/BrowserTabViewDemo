@@ -47,6 +47,7 @@
 @property (nonatomic, readonly) NSString *reuseIdentifier;
 @property (nonatomic, assign) NSInteger index;
 @property(nonatomic, assign) BrowserTabView * delegate;
--(id)initWithReuseIdentifier:(NSString *)reuseIdentifierIN andDelegate:(id)aDelegate;
+
+-(id)initWithReuseIdentifier:(NSString *)aReuseIdentifier andDelegate:(id)aDelegate;
 -(void)prepareForReuse;
 @end
