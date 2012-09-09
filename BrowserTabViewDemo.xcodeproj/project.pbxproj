@@ -32,9 +32,9 @@
 		110E97FC15FC270200F0C8DF /* tab_new_add.png in Resources */ = {isa = PBXBuildFile; fileRef = 110E97FA15FC270200F0C8DF /* tab_new_add.png */; };
 		110E97FD15FC270200F0C8DF /* tab_new_add@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 110E97FB15FC270200F0C8DF /* tab_new_add@2x.png */; };
 		1141E49815FC69F200E980AB /* BrowserTab.m in Sources */ = {isa = PBXBuildFile; fileRef = 1141E49715FC69F200E980AB /* BrowserTab.m */; };
-		1141E4AE15FCC85B00E980AB /* iOS Simulator Screen shot Sep 9, 2012 8.49.23 PM.png in Resources */ = {isa = PBXBuildFile; fileRef = 1141E4AC15FCC85B00E980AB /* iOS Simulator Screen shot Sep 9, 2012 8.49.23 PM.png */; };
-		1141E4AF15FCC85B00E980AB /* iOS Simulator Screen shot Sep 9, 2012 8.49.38 PM.png in Resources */ = {isa = PBXBuildFile; fileRef = 1141E4AD15FCC85B00E980AB /* iOS Simulator Screen shot Sep 9, 2012 8.49.38 PM.png */; };
 		1145EA9F15FCD558003B943A /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 1145EA9E15FCD558003B943A /* README.md */; };
+		1145EAA615FCD8B1003B943A /* screen1.png in Resources */ = {isa = PBXBuildFile; fileRef = 1145EAA415FCD8B1003B943A /* screen1.png */; };
+		1145EAA715FCD8B1003B943A /* screen2.png in Resources */ = {isa = PBXBuildFile; fileRef = 1145EAA515FCD8B1003B943A /* screen2.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -81,9 +81,9 @@
 		110E97FB15FC270200F0C8DF /* tab_new_add@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tab_new_add@2x.png"; sourceTree = "<group>"; };
 		1141E49615FC69F200E980AB /* BrowserTab.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BrowserTab.h; sourceTree = "<group>"; };
 		1141E49715FC69F200E980AB /* BrowserTab.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BrowserTab.m; sourceTree = "<group>"; };
-		1141E4AC15FCC85B00E980AB /* iOS Simulator Screen shot Sep 9, 2012 8.49.23 PM.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "iOS Simulator Screen shot Sep 9, 2012 8.49.23 PM.png"; sourceTree = "<group>"; };
-		1141E4AD15FCC85B00E980AB /* iOS Simulator Screen shot Sep 9, 2012 8.49.38 PM.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "iOS Simulator Screen shot Sep 9, 2012 8.49.38 PM.png"; sourceTree = "<group>"; };
 		1145EA9E15FCD558003B943A /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
+		1145EAA415FCD8B1003B943A /* screen1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = screen1.png; sourceTree = "<group>"; };
+		1145EAA515FCD8B1003B943A /* screen2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = screen2.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -114,6 +114,8 @@
 			isa = PBXGroup;
 			children = (
 				1145EA9E15FCD558003B943A /* README.md */,
+				1145EAA415FCD8B1003B943A /* screen1.png */,
+				1145EAA515FCD8B1003B943A /* screen2.png */,
 				110E97AC15FC25EF00F0C8DF /* BrowserTabViewDemo */,
 				110E97CA15FC25F000F0C8DF /* BrowserTabViewDemoTests */,
 				110E97A515FC25EF00F0C8DF /* Frameworks */,
@@ -150,8 +152,6 @@
 				110E97B815FC25EF00F0C8DF /* ViewController.h */,
 				110E97B915FC25EF00F0C8DF /* ViewController.m */,
 				110E97BB15FC25EF00F0C8DF /* ViewController.xib */,
-				1141E4AC15FCC85B00E980AB /* iOS Simulator Screen shot Sep 9, 2012 8.49.23 PM.png */,
-				1141E4AD15FCC85B00E980AB /* iOS Simulator Screen shot Sep 9, 2012 8.49.38 PM.png */,
 				110E97AD15FC25EF00F0C8DF /* Supporting Files */,
 			);
 			path = BrowserTabViewDemo;
@@ -298,9 +298,9 @@
 				110E97F515FC267C00F0C8DF /* tab_close@2x.png in Resources */,
 				110E97FC15FC270200F0C8DF /* tab_new_add.png in Resources */,
 				110E97FD15FC270200F0C8DF /* tab_new_add@2x.png in Resources */,
-				1141E4AE15FCC85B00E980AB /* iOS Simulator Screen shot Sep 9, 2012 8.49.23 PM.png in Resources */,
-				1141E4AF15FCC85B00E980AB /* iOS Simulator Screen shot Sep 9, 2012 8.49.38 PM.png in Resources */,
 				1145EA9F15FCD558003B943A /* README.md in Resources */,
+				1145EAA615FCD8B1003B943A /* screen1.png in Resources */,
+				1145EAA715FCD8B1003B943A /* screen2.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
