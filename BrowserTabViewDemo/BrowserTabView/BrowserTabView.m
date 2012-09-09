@@ -147,7 +147,7 @@ static NSString *kReuseIdentifier = @"UserIndentifier";
     }
     
 }
-// use items from the queue
+// use tabs from the queue
 -(BrowserTab *)dequeueTabUsingReuseIdentifier:(NSString *)reuseIdentifier
 {
     
@@ -163,12 +163,10 @@ static NSString *kReuseIdentifier = @"UserIndentifier";
         }
         
     }
-    
     if (reuseTab != nil) {
         [reuseQueue removeObject:reuseTab]; 
     }
-    
-    
+
     [reuseTab prepareForReuse];
     
     return [reuseTab autorelease];
@@ -340,8 +338,7 @@ static NSString *kReuseIdentifier = @"UserIndentifier";
                         if ([self.delegate respondsToSelector:@selector(BrowserTabView:exchangeTabAtIndex:withTabAtIndex:)]) {
                             [self.delegate BrowserTabView:self exchangeTabAtIndex:panPosition withTabAtIndex:nextPos];
                         }
-                        
-                        
+                                
                     }];
                 }
             }
