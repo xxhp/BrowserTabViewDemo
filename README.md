@@ -27,4 +27,4 @@ THE SOFTWARE.
 
 ScreenShot
 
-<img src="https://github.com/xxhp/BrowserTabViewDemo/blob/master/iOS%20Simulator%20Screen%20shot%20Sep%209%2C%202012%208.49.23%20PM.png">
+<img src="https://github.com/xxhp/BrowserTabViewDemo/blob/master/screen2.png">
