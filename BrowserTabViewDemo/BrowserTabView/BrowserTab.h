@@ -41,9 +41,9 @@
 @property(nonatomic, retain) UIImage *tabNormalImage;
 @property(nonatomic, retain) UIColor *normalTitleColor;
 @property(nonatomic, retain) UIColor *selectedTitleColor;
-@property(nonatomic, retain)  UIImageView *imageView;;
+@property(nonatomic, retain) UIImageView *imageView;;
 @property(nonatomic, retain) UILabel *textLabel;
-@property(nonatomic, retain)  UIImageView *imageViewClose;
+@property(nonatomic, retain) UIImageView *imageViewClose;
 @property(nonatomic, readonly) NSString *reuseIdentifier;
 @property(nonatomic, assign) NSInteger index;
 @property(nonatomic, assign) BrowserTabView * delegate;

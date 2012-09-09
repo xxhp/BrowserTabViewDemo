@@ -48,17 +48,18 @@ static NSString *kReuseIdentifier = @"UserIndentifier";
 @synthesize delegate;
 
 #pragma mark -
+#pragma mark init
 -(id)initWithTabTitles:(NSArray *)titles andDelegate:(id)aDelegate
 {
     self = [super init];
     if (self) {
         self.frame = kDefaultFrame;
         
-      
+        
         tabFramesArray = [[NSMutableArray alloc]initWithCapacity:0 ];
         
         self.tabViewBackImage = [UIImage imageNamed:@"tab_background.png"]; 
-       
+        
         tabsArray = [[NSMutableArray alloc] initWithCapacity:[titles count]]; 
         for (int i = 0;i< titles.count ;i++) {
             BrowserTab *tab=[[BrowserTab alloc] initWithReuseIdentifier:kReuseIdentifier andDelegate:self];
@@ -68,7 +69,7 @@ static NSString *kReuseIdentifier = @"UserIndentifier";
             
             [tabsArray addObject:tab];
         }
-           
+        
         //background color is the same color of tab when been selected.
         self.backgroundColor =[UIColor colorWithRed:242.0/255 green:242.0/255 blue:242.0/255 alpha:1];
         
@@ -96,7 +97,7 @@ static NSString *kReuseIdentifier = @"UserIndentifier";
         [self.delegate BrowserTabView:self didSelecedAtIndex:aSelectedTabIndex];
     }
     
-    
+    //tabs before the selected are added in sequence from the first to the selected ;
     for (NSInteger tabIndex = 0; tabIndex < selectedTabIndex; tabIndex++) {
         
         NSValue *tabFrameValue = [tabFramesArray objectAtIndex:tabIndex];
@@ -119,7 +120,7 @@ static NSString *kReuseIdentifier = @"UserIndentifier";
         
     }
     
-    //tabs after the selected are drawed in sequence from the last to the selected ;
+    //tabs after the selected are added in sequence from the last to the selected ;
     for (NSInteger tabIndex = (self.numberOfTabs - 1); tabIndex >= selectedTabIndex; tabIndex--) {
         
         BrowserTab *tab = [tabsArray objectAtIndex:tabIndex];
@@ -140,16 +141,7 @@ static NSString *kReuseIdentifier = @"UserIndentifier";
             
         }
         [self addSubview:tab];
-        if (self.selectedTabIndex == tabIndex && self.numberOfTabs>1){
-            
-            
-        }
-        
     }
-    
-    
-    
-    
     
 }
 // use items from the queue
@@ -158,11 +150,11 @@ static NSString *kReuseIdentifier = @"UserIndentifier";
     
     BrowserTab *reuseTab = nil;
     
-    for (BrowserTab *item in reuseQueue) {
+    for (BrowserTab *tab in reuseQueue) {
         
-        if ([item.reuseIdentifier isEqualToString:reuseIdentifier]) {
+        if ([tab.reuseIdentifier isEqualToString:reuseIdentifier]) {
             
-            reuseTab = [item retain];
+            reuseTab = [tab retain];
             break;
             
         }
@@ -190,7 +182,7 @@ static NSString *kReuseIdentifier = @"UserIndentifier";
 	if (!title) {
 		title = @"new Tab";
 	}
-   
+    
     BrowserTab *tab = [self dequeueTabUsingReuseIdentifier:kReuseIdentifier];
     if (tab) {
         tab.delegate = self;
@@ -200,7 +192,7 @@ static NSString *kReuseIdentifier = @"UserIndentifier";
     }
     tab.textLabel.text = title;
     tab.frame = CGRectZero;
-     
+    
     
 	[self.tabsArray addObject:tab];
     
@@ -231,7 +223,7 @@ static NSString *kReuseIdentifier = @"UserIndentifier";
     if (index < 0 || index >= [tabsArray count]) {
         return;
     }
-     BrowserTab *tab = [tabsArray objectAtIndex:index];
+    BrowserTab *tab = [tabsArray objectAtIndex:index];
     //the last one tab not allowed to remove,return;
     NSUInteger newIndex = tab.index;
     if (self.numberOfTabs == 1 || !self.numberOfTabs) {
@@ -247,7 +239,7 @@ static NSString *kReuseIdentifier = @"UserIndentifier";
     [tabsArray removeObject:tab];
     
     [tab removeFromSuperview];
-   
+    
     NSInteger tabIndex = 0;
     for (BrowserTab *tab in tabsArray) {
         
@@ -284,11 +276,10 @@ static NSString *kReuseIdentifier = @"UserIndentifier";
         [tabFramesArray addObject:[NSValue valueWithCGRect:tabFrame]];
         
         right += (tabWidth- overlapWidth);
-
+        
     }
     
 }
-#pragma mark -
 // Only override drawRect: if you perform custom drawing.
 // An empty implementation adversely affects performance during animation.
 - (void)drawRect:(CGRect)rect
@@ -339,14 +330,14 @@ static NSString *kReuseIdentifier = @"UserIndentifier";
                             tab.selected = YES;
                         }
                     }
-
+                    
                     [UIView animateWithDuration:0.3 animations:^{ 
                         nextTab.frame = CGRectMake(width*panPosition + 5, 0, width, self.bounds.size.height - 5);
-                       
+                        
                         if ([self.delegate respondsToSelector:@selector(BrowserTabView:exchangeTabAtIndex:withTabAtIndex:)]) {
                             [self.delegate BrowserTabView:self exchangeTabAtIndex:panPosition withTabAtIndex:nextPos];
                         }
-                      
+                        
                         
                     }];
                 }
@@ -354,7 +345,7 @@ static NSString *kReuseIdentifier = @"UserIndentifier";
         }
         
     } else if (sender.state == UIGestureRecognizerStateEnded) {
-       
+        
         [UIView animateWithDuration:0.3 animations:^{
             panTab.center = CGPointMake(panTab.center.x , panTab.center.y);
             [self setSelectedTabIndex:selectedTabIndex animated:YES];

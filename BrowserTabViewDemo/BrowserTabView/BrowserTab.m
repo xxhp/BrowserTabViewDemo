@@ -25,15 +25,8 @@
 @synthesize index;
 @synthesize delegate;
 
-- (id)initWithFrame:(CGRect)frame
-{
-    self = [super initWithFrame:frame];
-    if (self) {
-        // Initialization code
-    }
-    return self;
-}
-
+#pragma mark -
+#pragma mark init
 -(id)initWithReuseIdentifier:(NSString *)aReuseIdentifier andDelegate:(id)aDelegate
 {
     self = [super initWithFrame:CGRectZero];
@@ -154,7 +147,7 @@
 	if (self.delegate.numberOfTabs > 0) {
         UITouch *touch = [touches anyObject];
         CGFloat x = [touch locationInView:self].x;
-        if (x >120 && x <= 154 -8 && previousSelected) {
+        if (x >120 && x <= TAB_WIDTH -8 && previousSelected) {
             [self.delegate removeTabAtIndex:self.index animated:YES];
         }
     }

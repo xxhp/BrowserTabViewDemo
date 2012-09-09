@@ -69,7 +69,7 @@
 @property(nonatomic, retain) NSMutableArray *tabsArray;
 @property(nonatomic, retain) NSMutableArray *tabFramesArray;
 
-@property (nonatomic, readonly) NSMutableArray *reuseQueue;
+@property(nonatomic, readonly) NSMutableArray *reuseQueue;
 @property(nonatomic, assign) id<BrowserTabViewDelegate> delegate;
 
 -(id)initWithTabTitles:(NSArray *)titles andDelegate:(id)adelegate;
