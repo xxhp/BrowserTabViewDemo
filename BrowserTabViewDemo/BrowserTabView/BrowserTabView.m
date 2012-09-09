@@ -39,6 +39,10 @@ static NSString *kReuseIdentifier = @"UserIndentifier";
 
 #import "BrowserTabView.h"
 
+@interface BrowserTabView()
+-(void)caculateFrame;
+@end
+
 @implementation BrowserTabView
 @synthesize tabViewBackImage;
 @synthesize selectedTabIndex,numberOfTabs;

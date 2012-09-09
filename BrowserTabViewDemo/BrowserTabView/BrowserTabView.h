@@ -55,8 +55,7 @@
   
     //array for saving  frames of tabs
     NSMutableArray *tabFramesArray;
-   
-    
+
      // reuse queue holds unused tabs
      NSMutableArray *reuseQueue;                        
     id<BrowserTabViewDelegate> delegate;
@@ -73,8 +72,8 @@
 @property(nonatomic, assign) id<BrowserTabViewDelegate> delegate;
 
 -(id)initWithTabTitles:(NSArray *)titles andDelegate:(id)adelegate;
-- (void)addTabWithTitle:(NSString *)title;
--(void)caculateFrame;
+-(void)addTabWithTitle:(NSString *)title;
 -(void)setSelectedTabIndex:(NSInteger)aSelectedTabIndex animated:(BOOL)animation;
 -(void)removeTabAtIndex:(NSInteger)index animated:(BOOL)animated;
+
 @end
