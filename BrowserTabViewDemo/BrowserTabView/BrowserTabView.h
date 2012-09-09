@@ -28,7 +28,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "BrowserTab.h"
 @class BrowserTabView;
+@class BrowserTab;
 
 @protocol BrowserTabViewDelegate<NSObject>
 
@@ -36,60 +38,43 @@
 -(void)BrowserTabView:(BrowserTabView *)browserTabView didSelecedAtIndex:(NSUInteger)index;
 -(void)BrowserTabView:(BrowserTabView *)browserTabView willRemoveTabAtIndex:(NSUInteger)index;
 -(void)BrowserTabView:(BrowserTabView *)browserTabView didRemoveTabAtIndex:(NSUInteger)index;
-
+-(void)BrowserTabView:(BrowserTabView *)browserTabView exchangeTabAtIndex:(NSUInteger)fromIndex withTabAtIndex:(NSUInteger)toIndex;
 @end
 
-@interface BrowserTabView : UIView{
+@interface BrowserTabView : UIView<UIGestureRecognizerDelegate>{
    
-    //  image  for tab been selected
-    UIImage *tabSelectedImage;
- 
-    //  image  for tab been normal state
-    UIImage *tabNormalImage;
-   
-    // image for the tabview backgroud 
+   // image for the tabview backgroud
     UIImage *tabViewBackImage;
     
     NSUInteger numberOfTabs;
     
     NSInteger selectedTabIndex;
     
-    //array for saving all the tab titles
-    NSMutableArray *tabTitlesArray;
+    //array for saving all the tab
+    NSMutableArray *tabsArray;
   
-    //array for saving  frames of tab titles
-    NSMutableArray *tabTitleFramesArray;
-   
     //array for saving  frames of tabs
     NSMutableArray *tabFramesArray;
    
-    //font of tab title
-    UIFont *titleFont;
-   
-    //color for tab title when tab been normal state
-    UIColor *normalTitleColor;
     
-    //color for tab title when tab been selected
-    UIColor *selectedTitleColor;
-    
+     // reuse queue holds unused tabs
+     NSMutableArray *reuseQueue;                        
     id<BrowserTabViewDelegate> delegate;
     
 }
 
-@property(nonatomic, retain) UIImage *tabSelectedImage;
-@property(nonatomic, retain) UIImage *tabNormalImage;
 @property(nonatomic, retain) UIImage *tabViewBackImage;
 @property(nonatomic, assign) NSUInteger numberOfTabs;
 @property(nonatomic, assign) NSInteger selectedTabIndex;
-@property(nonatomic, retain) NSMutableArray *tabTitlesArray;
-@property(nonatomic, retain) NSMutableArray *tabTitleFramesArray;
+@property(nonatomic, retain) NSMutableArray *tabsArray;
 @property(nonatomic, retain) NSMutableArray *tabFramesArray;
-@property(nonatomic, retain) UIFont *titleFont;
-@property(nonatomic, retain) UIColor *normalTitleColor;
-@property(nonatomic, retain) UIColor *selectedTitleColor;
+
+@property (nonatomic, readonly) NSMutableArray *reuseQueue;
 @property(nonatomic, assign) id<BrowserTabViewDelegate> delegate;
 
 -(id)initWithTabTitles:(NSArray *)titles andDelegate:(id)adelegate;
 - (void)addTabWithTitle:(NSString *)title;
 -(void)caculateFrame;
+-(void)setSelectedTabIndex:(NSInteger)aSelectedTabIndex animated:(BOOL)animation;
+-(void)removeTabAtIndex:(NSInteger)index animated:(BOOL)animated;
 @end

@@ -31,9 +31,10 @@
 		110E97F515FC267C00F0C8DF /* tab_close@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 110E97F415FC267C00F0C8DF /* tab_close@2x.png */; };
 		110E97FC15FC270200F0C8DF /* tab_new_add.png in Resources */ = {isa = PBXBuildFile; fileRef = 110E97FA15FC270200F0C8DF /* tab_new_add.png */; };
 		110E97FD15FC270200F0C8DF /* tab_new_add@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 110E97FB15FC270200F0C8DF /* tab_new_add@2x.png */; };
-		1141E47B15FC537600E980AB /* iOS Simulator Screen shot Sep 9, 2012 12.28.58 PM.png in Resources */ = {isa = PBXBuildFile; fileRef = 1141E47915FC537600E980AB /* iOS Simulator Screen shot Sep 9, 2012 12.28.58 PM.png */; };
-		1141E47C15FC537600E980AB /* iOS Simulator Screen shot Sep 9, 2012 12.31.22 PM.png in Resources */ = {isa = PBXBuildFile; fileRef = 1141E47A15FC537600E980AB /* iOS Simulator Screen shot Sep 9, 2012 12.31.22 PM.png */; };
 		1141E47F15FC5AC000E980AB /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 1141E47E15FC5AC000E980AB /* README.md */; };
+		1141E49815FC69F200E980AB /* BrowserTab.m in Sources */ = {isa = PBXBuildFile; fileRef = 1141E49715FC69F200E980AB /* BrowserTab.m */; };
+		1141E4AE15FCC85B00E980AB /* iOS Simulator Screen shot Sep 9, 2012 8.49.23 PM.png in Resources */ = {isa = PBXBuildFile; fileRef = 1141E4AC15FCC85B00E980AB /* iOS Simulator Screen shot Sep 9, 2012 8.49.23 PM.png */; };
+		1141E4AF15FCC85B00E980AB /* iOS Simulator Screen shot Sep 9, 2012 8.49.38 PM.png in Resources */ = {isa = PBXBuildFile; fileRef = 1141E4AD15FCC85B00E980AB /* iOS Simulator Screen shot Sep 9, 2012 8.49.38 PM.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -78,9 +79,11 @@
 		110E97F415FC267C00F0C8DF /* tab_close@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tab_close@2x.png"; sourceTree = "<group>"; };
 		110E97FA15FC270200F0C8DF /* tab_new_add.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tab_new_add.png; sourceTree = "<group>"; };
 		110E97FB15FC270200F0C8DF /* tab_new_add@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tab_new_add@2x.png"; sourceTree = "<group>"; };
-		1141E47915FC537600E980AB /* iOS Simulator Screen shot Sep 9, 2012 12.28.58 PM.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "iOS Simulator Screen shot Sep 9, 2012 12.28.58 PM.png"; sourceTree = "<group>"; };
-		1141E47A15FC537600E980AB /* iOS Simulator Screen shot Sep 9, 2012 12.31.22 PM.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "iOS Simulator Screen shot Sep 9, 2012 12.31.22 PM.png"; sourceTree = "<group>"; };
 		1141E47E15FC5AC000E980AB /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = README.md; path = ../README.md; sourceTree = "<group>"; };
+		1141E49615FC69F200E980AB /* BrowserTab.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BrowserTab.h; sourceTree = "<group>"; };
+		1141E49715FC69F200E980AB /* BrowserTab.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BrowserTab.m; sourceTree = "<group>"; };
+		1141E4AC15FCC85B00E980AB /* iOS Simulator Screen shot Sep 9, 2012 8.49.23 PM.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "iOS Simulator Screen shot Sep 9, 2012 8.49.23 PM.png"; sourceTree = "<group>"; };
+		1141E4AD15FCC85B00E980AB /* iOS Simulator Screen shot Sep 9, 2012 8.49.38 PM.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "iOS Simulator Screen shot Sep 9, 2012 8.49.38 PM.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -140,14 +143,14 @@
 		110E97AC15FC25EF00F0C8DF /* BrowserTabViewDemo */ = {
 			isa = PBXGroup;
 			children = (
-				1141E47915FC537600E980AB /* iOS Simulator Screen shot Sep 9, 2012 12.28.58 PM.png */,
-				1141E47A15FC537600E980AB /* iOS Simulator Screen shot Sep 9, 2012 12.31.22 PM.png */,
 				110E97DB15FC264400F0C8DF /* BrowserTabView */,
 				110E97B515FC25EF00F0C8DF /* AppDelegate.h */,
 				110E97B615FC25EF00F0C8DF /* AppDelegate.m */,
 				110E97B815FC25EF00F0C8DF /* ViewController.h */,
 				110E97B915FC25EF00F0C8DF /* ViewController.m */,
 				110E97BB15FC25EF00F0C8DF /* ViewController.xib */,
+				1141E4AC15FCC85B00E980AB /* iOS Simulator Screen shot Sep 9, 2012 8.49.23 PM.png */,
+				1141E4AD15FCC85B00E980AB /* iOS Simulator Screen shot Sep 9, 2012 8.49.38 PM.png */,
 				110E97AD15FC25EF00F0C8DF /* Supporting Files */,
 			);
 			path = BrowserTabViewDemo;
@@ -188,9 +191,11 @@
 		110E97DB15FC264400F0C8DF /* BrowserTabView */ = {
 			isa = PBXGroup;
 			children = (
-				110E97DE15FC264400F0C8DF /* img */,
+				1141E49615FC69F200E980AB /* BrowserTab.h */,
+				1141E49715FC69F200E980AB /* BrowserTab.m */,
 				110E97DC15FC264400F0C8DF /* BrowserTabView.h */,
 				110E97DD15FC264400F0C8DF /* BrowserTabView.m */,
+				110E97DE15FC264400F0C8DF /* img */,
 				1141E47E15FC5AC000E980AB /* README.md */,
 			);
 			path = BrowserTabView;
@@ -293,9 +298,9 @@
 				110E97F515FC267C00F0C8DF /* tab_close@2x.png in Resources */,
 				110E97FC15FC270200F0C8DF /* tab_new_add.png in Resources */,
 				110E97FD15FC270200F0C8DF /* tab_new_add@2x.png in Resources */,
-				1141E47B15FC537600E980AB /* iOS Simulator Screen shot Sep 9, 2012 12.28.58 PM.png in Resources */,
-				1141E47C15FC537600E980AB /* iOS Simulator Screen shot Sep 9, 2012 12.31.22 PM.png in Resources */,
 				1141E47F15FC5AC000E980AB /* README.md in Resources */,
+				1141E4AE15FCC85B00E980AB /* iOS Simulator Screen shot Sep 9, 2012 8.49.23 PM.png in Resources */,
+				1141E4AF15FCC85B00E980AB /* iOS Simulator Screen shot Sep 9, 2012 8.49.38 PM.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -334,6 +339,7 @@
 				110E97B715FC25EF00F0C8DF /* AppDelegate.m in Sources */,
 				110E97BA15FC25EF00F0C8DF /* ViewController.m in Sources */,
 				110E97E915FC264400F0C8DF /* BrowserTabView.m in Sources */,
+				1141E49815FC69F200E980AB /* BrowserTab.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -434,6 +440,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "BrowserTabViewDemo/BrowserTabViewDemo-Prefix.pch";
 				INFOPLIST_FILE = "BrowserTabViewDemo/BrowserTabViewDemo-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -445,6 +452,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "BrowserTabViewDemo/BrowserTabViewDemo-Prefix.pch";
 				INFOPLIST_FILE = "BrowserTabViewDemo/BrowserTabViewDemo-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};

@@ -24,9 +24,9 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
     tabController= [[BrowserTabView alloc] initWithTabTitles:[NSArray arrayWithObjects:@"Tab 1",@"Tab 2",@"Tab 3", nil]
-                                                 andDelegate:self
-                    ];
+                                                 andDelegate:self];
     tabController.delegate = self;
+    
     UIButton *addButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [addButton setImage:[UIImage imageNamed:@"tab_new_add.png"] forState:UIControlStateNormal];
     [addButton addTarget:self action:@selector(add:) forControlEvents:UIControlEventTouchUpInside];
@@ -79,15 +79,17 @@
 #pragma mark BrowserTabViewDelegate
 -(void)BrowserTabView:(BrowserTabView *)browserTabView didSelecedAtIndex:(NSUInteger)index
 {
-    NSLog(@"%d",index);
     self.label.text = [NSString stringWithFormat:@"Tab selected at: %d",index +1];
 }
--(void)BrowserTabView:(BrowserTabView *)browserTabView willRemoveTabAtIndex:(NSUInteger)index{
-    NSLog(@"BrowserTabView will Remove Tab At Index: %d",index);
-}
+
 -(void)BrowserTabView:(BrowserTabView *)browserTabView didRemoveTabAtIndex:(NSUInteger)index{
-    NSLog(@"BrowserTabView did Remove Tab At Index:  %d",index);
+    NSLog(@"BrowserTabView did Remove Tab at index:  %d",index);
 }
+-(void)BrowserTabView:(BrowserTabView *)browserTabView exchangeTabAtIndex:(NSUInteger)fromIndex withTabAtIndex:(NSUInteger)toIndex{
+
+ NSLog(@"BrowserTabView exchange Tab  at index:  %d with Tab at index :%d ",fromIndex,toIndex);
+}
+
 
 - (void)dealloc {
     [label release];

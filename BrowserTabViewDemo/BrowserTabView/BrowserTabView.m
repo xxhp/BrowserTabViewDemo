@@ -35,44 +35,50 @@
 #define OVERLAP_WIDTH 15
 #define TAB_FOOTER_HEIGHT 5
 
+static NSString *kReuseIdentifier = @"UserIndentifier";
+
 #import "BrowserTabView.h"
 
 @implementation BrowserTabView
-@synthesize tabSelectedImage,tabNormalImage,tabViewBackImage;
+@synthesize tabViewBackImage;
 @synthesize selectedTabIndex,numberOfTabs;
-@synthesize tabTitlesArray,tabTitleFramesArray,tabFramesArray;
-@synthesize titleFont;
-@synthesize selectedTitleColor;
-@synthesize normalTitleColor;
+@synthesize tabsArray,tabFramesArray;
+
+@synthesize reuseQueue;
 @synthesize delegate;
 
+#pragma mark -
 -(id)initWithTabTitles:(NSArray *)titles andDelegate:(id)aDelegate
 {
     self = [super init];
     if (self) {
         self.frame = kDefaultFrame;
         
-        tabTitleFramesArray = [[NSMutableArray alloc]initWithCapacity:0 ];
+      
         tabFramesArray = [[NSMutableArray alloc]initWithCapacity:0 ];
         
         self.tabViewBackImage = [UIImage imageNamed:@"tab_background.png"]; 
-        self.tabSelectedImage = [UIImage imageNamed:@"tab_selected.png"]; 
-        self.tabNormalImage = [UIImage imageNamed:@"tab_normal.png"] ;
-        self.tabTitlesArray = [NSMutableArray arrayWithArray:titles];  
-        
-        self.normalTitleColor = [UIColor whiteColor];
-        self.selectedTitleColor = [UIColor blackColor];
-        self.titleFont = [UIFont systemFontOfSize:18];
-        
+       
+        tabsArray = [[NSMutableArray alloc] initWithCapacity:[titles count]]; 
+        for (int i = 0;i< titles.count ;i++) {
+            BrowserTab *tab=[[BrowserTab alloc] initWithReuseIdentifier:kReuseIdentifier andDelegate:self];
+            tab.index = i;
+            tab.textLabel.text = [titles objectAtIndex:i];
+            tab.delegate = self;
+            
+            [tabsArray addObject:tab];
+        }
+           
         //background color is the same color of tab when been selected.
         self.backgroundColor =[UIColor colorWithRed:242.0/255 green:242.0/255 blue:242.0/255 alpha:1];
         
         [self caculateFrame];
         
+        reuseQueue = [[NSMutableArray alloc] init];
         delegate = aDelegate;
         
-        if ([self.tabTitlesArray count]) {
-            [self setSelectedTabIndex:0];
+        if ([self.tabsArray count]) {
+            [self setSelectedTabIndex:0 animated:NO];
         }
         
     }
@@ -81,38 +87,153 @@
 
 - (NSUInteger)numberOfTabs
 {
-	return [self.tabTitlesArray count];
+	return [self.tabsArray count];
 }
--(void)setSelectedTabIndex:(NSInteger)aSelectedTabIndex
+-(void)setSelectedTabIndex:(NSInteger)aSelectedTabIndex animated:(BOOL)animation
 {
     selectedTabIndex = aSelectedTabIndex;
     if ([self.delegate respondsToSelector:@selector(BrowserTabView:didSelecedAtIndex:)]) {
         [self.delegate BrowserTabView:self didSelecedAtIndex:aSelectedTabIndex];
     }
-    [self setNeedsDisplay];
+    
+    
+    for (NSInteger tabIndex = 0; tabIndex < selectedTabIndex; tabIndex++) {
+        
+        NSValue *tabFrameValue = [tabFramesArray objectAtIndex:tabIndex];
+        CGRect tabFrame = [tabFrameValue CGRectValue];
+        BrowserTab *tab = [tabsArray objectAtIndex:tabIndex];
+        if (animation) {
+            [UIView beginAnimations:nil context:nil];
+            tab.frame = tabFrame;
+            tab.delegate = self;
+            [tab setSelected:NO];
+            [UIView commitAnimations];
+        }else{
+            
+            tab.frame = tabFrame;
+            tab.delegate = self;
+            [tab setSelected:NO];
+        }
+        
+        [self addSubview:tab];
+        
+    }
+    
+    //tabs after the selected are drawed in sequence from the last to the selected ;
+    for (NSInteger tabIndex = (self.numberOfTabs - 1); tabIndex >= selectedTabIndex; tabIndex--) {
+        
+        BrowserTab *tab = [tabsArray objectAtIndex:tabIndex];
+        if (self.selectedTabIndex == tabIndex) {
+            [tab setSelected:YES];
+        }else{
+            [tab setSelected:NO];
+        }
+        
+        NSValue *tabFrameValue = [tabFramesArray objectAtIndex:tabIndex];
+        CGRect tabFrame = [tabFrameValue CGRectValue];
+        if (animation) {
+            [UIView beginAnimations:nil context:nil];
+            tab.frame = tabFrame;
+            [UIView commitAnimations]; 
+        }else{
+            tab.frame = tabFrame;
+            
+        }
+        [self addSubview:tab];
+        if (self.selectedTabIndex == tabIndex && self.numberOfTabs>1){
+            
+            
+        }
+        
+    }
+    
+    
+    
+    
+    
+}
+// use items from the queue
+-(BrowserTab *)dequeueTabUsingReuseIdentifier:(NSString *)reuseIdentifier
+{
+    
+    BrowserTab *reuseTab = nil;
+    
+    for (BrowserTab *item in reuseQueue) {
+        
+        if ([item.reuseIdentifier isEqualToString:reuseIdentifier]) {
+            
+            reuseTab = [item retain];
+            break;
+            
+        }
+        
+    }
+    
+    if (reuseTab != nil) {
+        [reuseQueue removeObject:reuseTab]; 
+    }
+    
+    
+    [reuseTab prepareForReuse];
+    
+    return [reuseTab autorelease];
+    
 }
 
 - (void)addTabWithTitle:(NSString *)title 
 {
     //if the new tab is about to be off the tab view's bounds , here simply not adding it ;
-    if (TAB_WIDTH *(self.numberOfTabs+1)> self.bounds.size.width) {
+    if (TAB_WIDTH *(self.numberOfTabs)> self.bounds.size.width) {
         return;
     }
     
 	if (!title) {
 		title = @"new Tab";
 	}
-	[self.tabTitlesArray addObject:title];
+   
+    BrowserTab *tab = [self dequeueTabUsingReuseIdentifier:kReuseIdentifier];
+    if (tab) {
+        tab.delegate = self;
+    }
+    if (tab == nil) {
+        tab = [[[BrowserTab alloc] initWithReuseIdentifier:kReuseIdentifier andDelegate:self] autorelease];
+    }
+    tab.textLabel.text = title;
+    tab.frame = CGRectZero;
+     
+    
+	[self.tabsArray addObject:tab];
+    
+    for (int i = 0; i < [tabsArray count]; i++) {
+        BrowserTab *tab = [tabsArray objectAtIndex:i];
+        tab.index = i;
+        tab.selected = NO;
+    }
+    
     [self caculateFrame];
-    self.selectedTabIndex = [self.tabTitlesArray count]-1;
+    
+    selectedTabIndex = [self.tabsArray count]-1;
+    NSValue *tabFrameValue = [tabFramesArray lastObject];
+    CGRect tabFrame = [tabFrameValue CGRectValue];
+    
+    tab.frame = tabFrame;
+    tab.selected = YES;
+    
+    [self setSelectedTabIndex:selectedTabIndex animated:NO];
+    
     
 }
 
 
-- (void)removeTabAtIndex:(NSUInteger)index 
+-(void)removeTabAtIndex:(NSInteger)index animated:(BOOL)animated
 {
+    
+    if (index < 0 || index >= [tabsArray count]) {
+        return;
+    }
+     BrowserTab *tab = [tabsArray objectAtIndex:index];
     //the last one tab not allowed to remove,return;
-    NSUInteger newIndex = index;
+    NSUInteger newIndex = tab.index;
     if (self.numberOfTabs == 1 || !self.numberOfTabs) {
         return;
     }
@@ -122,13 +243,23 @@
         newIndex = index -1;
     }
     
-    if ([self.delegate respondsToSelector:@selector(BrowserTabView:willRemoveTabAtIndex:)]) {
-        [self.delegate BrowserTabView:self willRemoveTabAtIndex:index];
+    [reuseQueue addObject:[tabsArray objectAtIndex:index]];
+    [tabsArray removeObject:tab];
+    
+    [tab removeFromSuperview];
+   
+    NSInteger tabIndex = 0;
+    for (BrowserTab *tab in tabsArray) {
+        
+        tab.index = tabIndex;
+        
+        tabIndex++;
+        
     }
     
-	[self.tabTitlesArray removeObjectAtIndex:index];
     [self caculateFrame];
-    self.selectedTabIndex = newIndex;
+    
+    [ self setSelectedTabIndex:newIndex animated:animated];
     
     if ([self.delegate respondsToSelector:@selector(BrowserTabView:didRemoveTabAtIndex:)]) {
         [self.delegate BrowserTabView:self didRemoveTabAtIndex:index];
@@ -137,36 +268,27 @@
 }
 -(void)caculateFrame
 {
-    // caculate and save frame for each tab ,and it's title
-    CGFloat tabWidth =TAB_WIDTH;
-    float overlapWidth = OVERLAP_WIDTH;
+    // caculate and save frame for each tab
+    const CGFloat tabWidth =TAB_WIDTH;
+    const float overlapWidth = OVERLAP_WIDTH ;
     CGFloat height = self.bounds.size.height;
     CGFloat right = 0;
     
     [tabFramesArray removeAllObjects];
-    [tabTitleFramesArray removeAllObjects];
     
     for (NSInteger tabIndex = 0; tabIndex <self.numberOfTabs; tabIndex++) {
         
-        NSString *title = [self.tabTitlesArray objectAtIndex:tabIndex];
-        const CGSize titleSize = [title sizeWithFont:titleFont];
-        const CGFloat titleWidth = MIN(tabWidth - overlapWidth, titleSize.width);
         
-        CGRect titleFrame = CGRectMake(rint(right  + (tabWidth  - titleWidth) / 2),
-                                       rint((height - titleSize.height) / 2),
-                                       titleWidth, titleSize.height);
-        
-        //tabFrame left 5 dp to show the background, and give a look that tab has bottom
-        CGRect tabFrame = CGRectMake(right, 0, overlapWidth + tabWidth, height- TAB_FOOTER_HEIGHT);
+        CGRect tabFrame = CGRectMake(right, 0, tabWidth, height- TAB_FOOTER_HEIGHT);
         
         [tabFramesArray addObject:[NSValue valueWithCGRect:tabFrame]];
-        [tabTitleFramesArray addObject:[NSValue valueWithCGRect:titleFrame]];
         
-        right += tabWidth;
-        
+        right += (tabWidth- overlapWidth);
+
     }
     
 }
+#pragma mark -
 // Only override drawRect: if you perform custom drawing.
 // An empty implementation adversely affects performance during animation.
 - (void)drawRect:(CGRect)rect
@@ -178,99 +300,66 @@
     //left 5 dp to show the background, and give a look that tab has footer
 	[tabViewBackImage drawInRect:CGRectMake(0, 0, self.frame.size.width, height - TAB_FOOTER_HEIGHT)];
     
-	if (self.numberOfTabs > 0) {
-        
-        //tabs before the selected  are drawed in sequence from the first to the selected;
-        for (NSInteger tabIndex = 0; tabIndex < selectedTabIndex; tabIndex++) {
-            UIImage *image = nil;
-            
-            NSValue *tabFrameValue = [tabFramesArray objectAtIndex:tabIndex];
-            CGRect tabFrame = [tabFrameValue CGRectValue];
-            image = tabNormalImage;
-            [normalTitleColor set];
-            [image drawInRect:tabFrame];
-            
-            //draw  tab's title;
-            NSString *title = [self.tabTitlesArray objectAtIndex:tabIndex];
-            NSValue *titleFrameValue = [tabTitleFramesArray objectAtIndex:tabIndex];
-            CGRect titleFrame = [titleFrameValue CGRectValue];
-            
-            [title drawAtPoint:titleFrame.origin
-                      forWidth:titleFrame.size.width
-                      withFont:titleFont
-                 lineBreakMode:UILineBreakModeTailTruncation];
-            
-            
-        }
-        //tabs after the selected are drawed in sequence from the last to the selected ;
-        for (NSInteger tabIndex = (self.numberOfTabs - 1); tabIndex >= selectedTabIndex; tabIndex--) {
-            UIImage *image = nil;
-            
-            if (self.selectedTabIndex == tabIndex) {
-                image = tabSelectedImage;
-                [selectedTitleColor set];
-            } else {
-                image = tabNormalImage;
-                [normalTitleColor set];
-            }
-            
-            NSValue *tabFrameValue = [tabFramesArray objectAtIndex:tabIndex];
-            CGRect tabFrame = [tabFrameValue CGRectValue];
-            [image drawInRect:tabFrame];
-            
-            // draw the close image for the selected;
-            if (self.selectedTabIndex == tabIndex && self.numberOfTabs>1){
-                UIImage *tabClose = [UIImage imageNamed:@"tab_close.png"];
-                [tabClose drawInRect:CGRectMake(tabFrame.origin.x+130, tabFrame.origin.y+12, 19, 18)];
-                
-            }
-            
-            //draw  tab's title;
-            NSString *title = [self.tabTitlesArray objectAtIndex:tabIndex];
-            NSValue *titleFrameValue = [tabTitleFramesArray objectAtIndex:tabIndex];
-            CGRect titleFrame = [titleFrameValue CGRectValue];
-            
-            [title drawAtPoint:titleFrame.origin
-                      forWidth:titleFrame.size.width
-                      withFont:titleFont
-                 lineBreakMode:UILineBreakModeTailTruncation];
-            
-        }
-        
-    }
-    
 }
-- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
-{
-	[super touchesEnded:touches withEvent:event];
-	if (self.numberOfTabs > 0) {
-        CGFloat overlapWidth = OVERLAP_WIDTH;
-        CGFloat tabWidth = TAB_WIDTH;
-        UITouch *touch = [touches anyObject];
-        CGFloat x = [touch locationInView:self].x;
-        if (x >= 5 && x <= (self.numberOfTabs * tabWidth - 5)) {
-            
-            NSInteger previousSelectedIndex = selectedTabIndex;
-            NSInteger index = (x - 5 - overlapWidth / 2) / tabWidth;
-            
-            if (index >= self.numberOfTabs) {
-                index = self.numberOfTabs - 1;
-            } else if (index < 0) {
-                index = 0;
+
+#pragma mark -
+#pragma mark UIPanGestureRecognizer
+- (void)handlePanGuesture:(UIPanGestureRecognizer *)sender {
+    BrowserTab *panTab = (BrowserTab *)sender.view;
+    NSUInteger panPosition = [self.tabsArray indexOfObject:panTab];
+    
+    if (sender.state == UIGestureRecognizerStateBegan) {
+        [self setSelectedTabIndex:panPosition animated:NO];
+    } else if (sender.state == UIGestureRecognizerStateChanged) {
+        CGPoint position = [sender translationInView:self];
+        CGPoint center = CGPointMake(sender.view.center.x + position.x, sender.view.center.y);
+        
+        // Don't move the tab out of the tabview
+        if (center.x < self.bounds.size.width-5  &&  center.x > 5) {
+            sender.view.center = center;
+            [sender setTranslation:CGPointZero inView:self];
+            CGFloat width = TAB_WIDTH;
+            // If more than half the tab width is moved, exchange the positions
+            if (abs(center.x - width*panPosition - width/2) > width/2) {
+                NSUInteger nextPos = position.x > 0 ? panPosition+1 : panPosition-1;
+                if (nextPos >= self.numberOfTabs)
+                    return;
+                
+                BrowserTab *nextTab = [self.tabsArray objectAtIndex:nextPos];
+                if (nextTab) {
+                    if (selectedTabIndex == panPosition)
+                        selectedTabIndex = nextPos;
+                    [self.tabsArray exchangeObjectAtIndex:panPosition withObjectAtIndex:nextPos];
+                    
+                    for (int i = 0; i < [tabsArray count]; i++) {
+                        BrowserTab *tab = [tabsArray objectAtIndex:i];
+                        tab.index = i;
+                        tab.selected = NO;
+                        if (i == selectedTabIndex) {
+                            tab.selected = YES;
+                        }
+                    }
+
+                    [UIView animateWithDuration:0.3 animations:^{ 
+                        nextTab.frame = CGRectMake(width*panPosition + 5, 0, width, self.bounds.size.height - 5);
+                       
+                        if ([self.delegate respondsToSelector:@selector(BrowserTabView:exchangeTabAtIndex:withTabAtIndex:)]) {
+                            [self.delegate BrowserTabView:self exchangeTabAtIndex:panPosition withTabAtIndex:nextPos];
+                        }
+                      
+                        
+                    }];
+                }
             }
-            
-            self.selectedTabIndex = index;
-            
-            //reconigzer the close action and remove the tab,only the selected can been removed
-            NSValue *tabFrameValue = [tabFramesArray objectAtIndex:index];
-            CGRect tabFrame = [tabFrameValue CGRectValue];
-            if (x - tabFrame.origin.x>130 && x <= tabFrame.origin.x +154 && (previousSelectedIndex == selectedTabIndex)) {
-                [self removeTabAtIndex:index];
-            }
-            
         }
-		
-	}
+        
+    } else if (sender.state == UIGestureRecognizerStateEnded) {
+       
+        [UIView animateWithDuration:0.3 animations:^{
+            panTab.center = CGPointMake(panTab.center.x , panTab.center.y);
+            [self setSelectedTabIndex:selectedTabIndex animated:YES];
+        }];
+    }
 }
 
 @end
