@@ -58,13 +58,12 @@ static NSString *kReuseIdentifier = @"UserIndentifier";
     self = [super init];
     if (self) {
         self.frame = kDefaultFrame;
-        
-        
         tabFramesArray = [[NSMutableArray alloc]initWithCapacity:0 ];
         
         self.tabViewBackImage = [UIImage imageNamed:@"tab_background.png"]; 
         
         tabsArray = [[NSMutableArray alloc] initWithCapacity:[titles count]]; 
+        
         for (int i = 0;i< titles.count ;i++) {
             BrowserTab *tab=[[BrowserTab alloc] initWithReuseIdentifier:kReuseIdentifier andDelegate:self];
             tab.index = i;
