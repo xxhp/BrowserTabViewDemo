@@ -140,14 +140,14 @@
 		110E97AC15FC25EF00F0C8DF /* BrowserTabViewDemo */ = {
 			isa = PBXGroup;
 			children = (
+				1141E47915FC537600E980AB /* iOS Simulator Screen shot Sep 9, 2012 12.28.58 PM.png */,
+				1141E47A15FC537600E980AB /* iOS Simulator Screen shot Sep 9, 2012 12.31.22 PM.png */,
 				110E97DB15FC264400F0C8DF /* BrowserTabView */,
 				110E97B515FC25EF00F0C8DF /* AppDelegate.h */,
 				110E97B615FC25EF00F0C8DF /* AppDelegate.m */,
 				110E97B815FC25EF00F0C8DF /* ViewController.h */,
 				110E97B915FC25EF00F0C8DF /* ViewController.m */,
 				110E97BB15FC25EF00F0C8DF /* ViewController.xib */,
-				1141E47915FC537600E980AB /* iOS Simulator Screen shot Sep 9, 2012 12.28.58 PM.png */,
-				1141E47A15FC537600E980AB /* iOS Simulator Screen shot Sep 9, 2012 12.31.22 PM.png */,
 				110E97AD15FC25EF00F0C8DF /* Supporting Files */,
 			);
 			path = BrowserTabViewDemo;
