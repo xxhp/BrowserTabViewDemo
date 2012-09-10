@@ -5,6 +5,9 @@
 //  Created by xiaohaibo on 9/9/12.
 //  Copyright (c) 2012 xiaohaibo. All rights reserved.
 
+//  github:https://github.com/xxhp/BrowserTabViewDemo
+//  Email:xiao_hb@qq.com
+
 //  Permission is hereby granted, free of charge, to any person
 //  obtaining a copy of this software and associated documentation
 //  files (the "Software"), to deal in the Software without
