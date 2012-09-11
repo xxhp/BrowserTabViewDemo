@@ -190,14 +190,13 @@ static NSString *kReuseIdentifier = @"UserIndentifier";
     BrowserTab *tab = [self dequeueTabUsingReuseIdentifier:kReuseIdentifier];
     if (tab) {
         tab.delegate = self;
-    }
-    if (tab == nil) {
+    }else{
+        
         tab = [[[BrowserTab alloc] initWithReuseIdentifier:kReuseIdentifier andDelegate:self] autorelease];
     }
     tab.textLabel.text = title;
     tab.frame = CGRectZero;
-    
-    
+
 	[self.tabsArray addObject:tab];
     
     for (int i = 0; i < [tabsArray count]; i++) {
