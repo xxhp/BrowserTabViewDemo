@@ -3,7 +3,7 @@
 //  BrowserTabDemo
 //
 //  Created by xiao haibo on 9/9/12.
-//  Copyright (c) 2012 xiaohaibo. All rights reserved.
+//  Copyright (c) 2012 xiao haibo. All rights reserved.
 
 //  github:https://github.com/xxhp/BrowserTabViewDemo
 //  Email:xiao_hb@qq.com
