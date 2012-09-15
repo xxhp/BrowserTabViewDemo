@@ -1,5 +1,5 @@
 //
-//  BrowserTabController.h
+//  BrowserTab.h
 //  BrowserTabDemo
 //
 //  Created by xiao haibo on 9/9/12.
