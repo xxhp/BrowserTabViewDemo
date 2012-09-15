@@ -2,7 +2,7 @@
 //  BrowserTabController.m
 //  BrowserTabDemo
 //
-//  Created by xiaohaibo on 9/9/12.
+//  Created by xiao haibo on 9/9/12.
 //  Copyright (c) 2012 xiaohaibo. All rights reserved.
 
 //  github:https://github.com/xxhp/BrowserTabViewDemo
