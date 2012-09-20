@@ -301,6 +301,9 @@ static NSString *kReuseIdentifier = @"UserIndentifier";
 #pragma mark -
 #pragma mark UIPanGestureRecognizer
 - (void)handlePanGuesture:(UIPanGestureRecognizer *)sender {
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////
+	//// The following algorithm for handling panguesture inspired from  https://github.com/graetzer/SGTabs
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////
     BrowserTab *panTab = (BrowserTab *)sender.view;
     NSUInteger panPosition = [self.tabsArray indexOfObject:panTab];
     
