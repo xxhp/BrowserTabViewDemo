@@ -231,6 +231,9 @@ static NSString *kReuseIdentifier = @"UserIndentifier";
         return;
     }
     
+    if ([self.delegate respondsToSelector:@selector(BrowserTabView:willRemoveTabAtIndex:)]) {
+        [self.delegate BrowserTabView:self willRemoveTabAtIndex:index];
+    }
     //if previous selected index was the last tab ,keep the coming last one selected
     if (index == self.numberOfTabs-1) {
         newIndex = index -1;

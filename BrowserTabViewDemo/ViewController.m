@@ -82,6 +82,11 @@
     self.label.text = [NSString stringWithFormat:@"Tab selected at: %d",index +1];
 }
 
+-(void)BrowserTabView:(BrowserTabView *)browserTabView willRemoveTabAtIndex:(NSUInteger)index {
+    NSLog(@"BrowserTabView WILL Remove Tab at index:  %d",index);
+
+}
+
 -(void)BrowserTabView:(BrowserTabView *)browserTabView didRemoveTabAtIndex:(NSUInteger)index{
     NSLog(@"BrowserTabView did Remove Tab at index:  %d",index);
 }
