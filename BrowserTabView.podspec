@@ -19,7 +19,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
   s.source       = { :git => "https://github.com/garnett/BrowserTabViewDemo.git", :tag => "0.0.1" }
   s.platform     = :ios, '5.0'
   s.source_files = 'BrowserTabViewDemo/BrowserTabView/*.{h,m}'
-  # s.resources = "BrowserTabViewDemo/BrowserTabView/img/*.png"
+  s.resources = "BrowserTabViewDemo/BrowserTabView/img/*.png"
   s.framework  = 'CoreGraphics'
   s.requires_arc = true
 end
