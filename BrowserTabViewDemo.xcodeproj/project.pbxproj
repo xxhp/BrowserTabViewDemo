@@ -11,9 +11,9 @@
 		110E97A915FC25EF00F0C8DF /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 110E97A815FC25EF00F0C8DF /* Foundation.framework */; };
 		110E97AB15FC25EF00F0C8DF /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 110E97AA15FC25EF00F0C8DF /* CoreGraphics.framework */; };
 		110E97B115FC25EF00F0C8DF /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 110E97AF15FC25EF00F0C8DF /* InfoPlist.strings */; };
-		110E97B315FC25EF00F0C8DF /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 110E97B215FC25EF00F0C8DF /* main.m */; };
-		110E97B715FC25EF00F0C8DF /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 110E97B615FC25EF00F0C8DF /* AppDelegate.m */; };
-		110E97BA15FC25EF00F0C8DF /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 110E97B915FC25EF00F0C8DF /* ViewController.m */; };
+		110E97B315FC25EF00F0C8DF /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 110E97B215FC25EF00F0C8DF /* main.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		110E97B715FC25EF00F0C8DF /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 110E97B615FC25EF00F0C8DF /* AppDelegate.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		110E97BA15FC25EF00F0C8DF /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 110E97B915FC25EF00F0C8DF /* ViewController.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		110E97BD15FC25EF00F0C8DF /* ViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 110E97BB15FC25EF00F0C8DF /* ViewController.xib */; };
 		110E97C515FC25F000F0C8DF /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 110E97C415FC25F000F0C8DF /* SenTestingKit.framework */; };
 		110E97C615FC25F000F0C8DF /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 110E97A615FC25EF00F0C8DF /* UIKit.framework */; };
@@ -437,6 +437,7 @@
 		110E97D615FC25F000F0C8DF /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "BrowserTabViewDemo/BrowserTabViewDemo-Prefix.pch";
 				INFOPLIST_FILE = "BrowserTabViewDemo/BrowserTabViewDemo-Info.plist";
@@ -449,6 +450,7 @@
 		110E97D715FC25F000F0C8DF /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "BrowserTabViewDemo/BrowserTabViewDemo-Prefix.pch";
 				INFOPLIST_FILE = "BrowserTabViewDemo/BrowserTabViewDemo-Info.plist";

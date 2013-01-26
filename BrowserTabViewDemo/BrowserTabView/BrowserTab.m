@@ -32,33 +32,32 @@
 //
 
 #import "BrowserTab.h"
+
 //define width of a tab ,here is the width of the image used to render tab;
+
 #define TAB_WIDTH 154 
 #define TAB_HEIGHT 38 
-@implementation BrowserTab
-@synthesize title;
-@synthesize titleFont;
-@synthesize selected=_selected;
-@synthesize tabNormalImage;
-@synthesize tabSelectedImage;
-@synthesize normalTitleColor;
-@synthesize selectedTitleColor;
-@synthesize reuseIdentifier;
-@synthesize imageView;
-@synthesize imageViewClose;
-@synthesize textLabel;
-@synthesize index;
-@synthesize delegate;
 
-#pragma mark -
-#pragma mark init
--(id)initWithReuseIdentifier:(NSString *)aReuseIdentifier andDelegate:(id)aDelegate
+@interface BrowserTab () {
+    NSString *__weak reuseIdentifier;
+    BOOL previousSelected;
+    UIPanGestureRecognizer *panGuesture;
+}
+
+@end
+
+@implementation BrowserTab
+
+@synthesize reuseIdentifier;
+
+#pragma mark - init
+- (id)initWithReuseIdentifier:(NSString *)aReuseIdentifier andDelegate:(id)aDelegate
 {
-    self = [super initWithFrame:CGRectZero];
-    if (self) {
+
+    if (self = [super initWithFrame:CGRectZero]) {
         
-        delegate = aDelegate;
-        reuseIdentifier = [aReuseIdentifier retain];
+        _delegate = aDelegate;
+        reuseIdentifier = aReuseIdentifier;
         self.normalTitleColor = [UIColor whiteColor];
         self.selectedTitleColor = [UIColor blackColor];
         
@@ -69,35 +68,35 @@
         
         self.titleFont = [UIFont systemFontOfSize:18];
         
-        imageView = [[UIImageView alloc] initWithFrame:self.bounds];
+        _imageView = [[UIImageView alloc] initWithFrame:self.bounds];
         
         self.imageView.backgroundColor = [UIColor clearColor];
         
         self.backgroundColor = [UIColor clearColor];
         
-        [self addSubview:imageView];
+        [self addSubview:_imageView];
         
-        textLabel = [[UILabel alloc] initWithFrame:self.bounds];
-        textLabel.textAlignment = UITextAlignmentCenter;
+        _textLabel = [[UILabel alloc] initWithFrame:self.bounds];
+        _textLabel.textAlignment = UITextAlignmentCenter;
         
         
         self.textLabel.backgroundColor = [UIColor clearColor];
         
-        imageViewClose = [[UIImageView alloc] initWithFrame:self.bounds];
+        _imageViewClose = [[UIImageView alloc] initWithFrame:self.bounds];
         
         self.imageViewClose.backgroundColor = [UIColor clearColor];
-        imageViewClose.image = [UIImage imageNamed:@"tab_close.png"];
-        imageViewClose.hidden = YES;
+        _imageViewClose.image = [UIImage imageNamed:@"tab_close.png"];
+        _imageViewClose.hidden = YES;
         
         self.backgroundColor = [UIColor clearColor];
         
-        [self addSubview:imageViewClose];
-        [self addSubview:textLabel]; 
+        [self addSubview:_imageViewClose];
+        [self addSubview:_textLabel];
         
         [self setSelected:YES];
-        panGuesture = [[UIPanGestureRecognizer alloc] initWithTarget:delegate    
+        panGuesture = [[UIPanGestureRecognizer alloc] initWithTarget:_delegate
                                                        action:@selector(handlePanGuesture:)];
-        panGuesture.delegate = delegate;
+        panGuesture.delegate = _delegate;
         [self addGestureRecognizer:panGuesture];
         
     }
@@ -109,18 +108,18 @@
     _selected = isSelected;
     
     if (isSelected) {
-        self.textLabel.textColor = selectedTitleColor;
-        imageView.image = self.tabSelectedImage;
+        self.textLabel.textColor = _selectedTitleColor;
+        _imageView.image = self.tabSelectedImage;
         if (self.delegate.numberOfTabs>1) {
-            imageViewClose.hidden = NO;
+            _imageViewClose.hidden = NO;
         }else{
-            imageViewClose.hidden = YES;
+            _imageViewClose.hidden = YES;
         }
         
     }else{
-        self.textLabel.textColor = normalTitleColor;
-        imageView.image = self.tabNormalImage;
-        imageViewClose.hidden = YES;    
+        self.textLabel.textColor = _normalTitleColor;
+        _imageView.image = self.tabNormalImage;
+        _imageViewClose.hidden = YES;
     }
 }
 -(void)prepareForReuse
@@ -130,24 +129,16 @@
     self.delegate = nil;
     _selected = NO;    
 }
-/*
-// Only override drawRect: if you perform custom drawing.
-// An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect
-{
-    
-}
-*/
 
 -(void)layoutSubviews
 {
-    title = self.textLabel.text;
-    CGSize titleSize = [title sizeWithFont:titleFont];
-    imageView.frame = self.bounds;
+    _title = self.textLabel.text;
+    CGSize titleSize = [_title sizeWithFont:_titleFont];
+    _imageView.frame = self.bounds;
     
     self.textLabel.frame = CGRectMake((self.bounds.size.width - titleSize.width)/2 , (self.bounds.size.height - titleSize.height)/2, titleSize.width,titleSize.height);
        
-    imageViewClose.frame =  CGRectMake(self.bounds.origin.x+115, self.bounds.origin.y+12, 19, 18);
+    _imageViewClose.frame =  CGRectMake(self.bounds.origin.x+115, self.bounds.origin.y+12, 19, 18);
     
     [super layoutSubviews];
 }
@@ -161,8 +152,6 @@
     previousSelected =  _selected;
     [self setSelected:YES];
     [self.delegate setSelectedTabIndex:self.index animated:NO];
-
-    
 }
 
 

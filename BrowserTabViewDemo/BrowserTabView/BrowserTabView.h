@@ -31,9 +31,8 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "BrowserTab.h"
+
 @class BrowserTabView;
-@class BrowserTab;
 
 @protocol BrowserTabViewDelegate<NSObject>
 
@@ -44,35 +43,16 @@
 -(void)BrowserTabView:(BrowserTabView *)browserTabView exchangeTabAtIndex:(NSUInteger)fromIndex withTabAtIndex:(NSUInteger)toIndex;
 @end
 
-@interface BrowserTabView : UIView<UIGestureRecognizerDelegate>{
-   
-   // image for the tabview backgroud
-    UIImage *tabViewBackImage;
-    
-    NSUInteger numberOfTabs;
-    
-    NSInteger selectedTabIndex;
-    
-    //array for saving all the tab
-    NSMutableArray *tabsArray;
-  
-    //array for saving  frames of tabs
-    NSMutableArray *tabFramesArray;
+@interface BrowserTabView : UIView<UIGestureRecognizerDelegate>
 
-     // reuse queue holds unused tabs
-     NSMutableArray *reuseQueue;                        
-    id<BrowserTabViewDelegate> delegate;
-    
-}
-
-@property(nonatomic, retain) UIImage *tabViewBackImage;
+@property(nonatomic, strong) UIImage *tabViewBackImage;
 @property(nonatomic, assign) NSUInteger numberOfTabs;
 @property(nonatomic, assign) NSInteger selectedTabIndex;
-@property(nonatomic, retain) NSMutableArray *tabsArray;
-@property(nonatomic, retain) NSMutableArray *tabFramesArray;
+@property(nonatomic, strong) NSMutableArray *tabsArray;
+@property(nonatomic, strong) NSMutableArray *tabFramesArray;
 
 @property(nonatomic, readonly) NSMutableArray *reuseQueue;
-@property(nonatomic, assign) id<BrowserTabViewDelegate> delegate;
+@property(nonatomic, weak) id<BrowserTabViewDelegate> delegate;
 
 -(id)initWithTabTitles:(NSArray *)titles andDelegate:(id)adelegate;
 -(void)addTabWithTitle:(NSString *)title;
