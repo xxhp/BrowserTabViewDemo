@@ -39,6 +39,7 @@
 #define OVERLAP_WIDTH 15
 #define TAB_FOOTER_HEIGHT 5
 
+static NSInteger const kDefaultTabWidth = 154;
 static NSString *kReuseIdentifier = @"UserIndentifier";
 
 #import "BrowserTabView.h"
@@ -48,6 +49,7 @@ static NSString *kReuseIdentifier = @"UserIndentifier";
 
 @property(nonatomic, strong) NSMutableArray *tabsArray;
 @property(nonatomic, strong) NSMutableArray *tabFramesArray;
+@property (nonatomic, assign) CGFloat tabWidth;
 
 - (void)caculateFrame;
 
@@ -60,7 +62,7 @@ static NSString *kReuseIdentifier = @"UserIndentifier";
 - (id)initWithTabTitles:(NSArray *)titles andDelegate:(id)aDelegate
 {
     if ([super init]) {
-        _tabWidth = 154;
+        _tabWidth = kDefaultTabWidth;
         self.frame = kDefaultFrame;
         _tabFramesArray = [[NSMutableArray alloc] initWithCapacity:0];
         
@@ -101,6 +103,7 @@ static NSString *kReuseIdentifier = @"UserIndentifier";
     [self caculateFrame];
     [self setSelectedTabIndex:_selectedTabIndex animated:NO];
 }
+
 - (NSUInteger)numberOfTabs
 {
 	return [self.tabsArray count];
@@ -170,29 +173,28 @@ static NSString *kReuseIdentifier = @"UserIndentifier";
     for (BrowserTab *tab in _reuseQueue) {
         
         if ([tab.reuseIdentifier isEqualToString:reuseIdentifier]) {
-            
             reuseTab = tab;
             break;
-            
-        }
-        
+        }  
     }
     if (reuseTab != nil) {
         [_reuseQueue removeObject:reuseTab];
     }
 
     [reuseTab prepareForReuse];
-    
     return reuseTab;
-    
 }
 
 - (void)addTabWithTitle:(NSString *)title 
 {
-    //if the new tab is about to be off the tab view's bounds , here simply not adding it ;
-    if (self.tabWidth * (self.numberOfTabs)> self.bounds.size.width) {
+    if (self.numberOfTabs > CGRectGetWidth(self.bounds) * 1.8 / kDefaultTabWidth) {
         return;
     }
+    
+    if (self.tabWidth * (self.numberOfTabs + 1) > CGRectGetWidth(self.bounds)) {
+        self.tabWidth = CGRectGetWidth(self.bounds) / (self.numberOfTabs + 1);
+    }
+    
     
 	if (!title) {
 		title = @"new Tab";
@@ -201,8 +203,7 @@ static NSString *kReuseIdentifier = @"UserIndentifier";
     BrowserTab *tab = [self dequeueTabUsingReuseIdentifier:kReuseIdentifier];
     if (tab) {
         tab.delegate = self;
-    }else{
-        
+    } else {
         tab = [[BrowserTab alloc] initWithReuseIdentifier:kReuseIdentifier andDelegate:self];
     }
     tab.titleField.text = title;
@@ -234,7 +235,11 @@ static NSString *kReuseIdentifier = @"UserIndentifier";
     if (index < 0 || index >= [_tabsArray count]) {
         return;
     }
-    BrowserTab *tab = [_tabsArray objectAtIndex:index];
+    if (self.tabWidth < kDefaultTabWidth) {
+        self.tabWidth = CGRectGetWidth(self.bounds) / (self.numberOfTabs - 1);
+    }
+    
+    BrowserTab *tab = _tabsArray[index];
     //the last one tab not allowed to remove,return;
     NSUInteger newIndex = tab.index;
     if (self.numberOfTabs == 1 || !self.numberOfTabs) {
@@ -245,22 +250,19 @@ static NSString *kReuseIdentifier = @"UserIndentifier";
         [self.delegate BrowserTabView:self willRemoveTabAtIndex:index];
     }
     //if previous selected index was the last tab ,keep the coming last one selected
-    if (index == self.numberOfTabs-1) {
-        newIndex = index -1;
+    if (index == self.numberOfTabs - 1) {
+        newIndex = index - 1;
     }
     
-    [_reuseQueue addObject:[_tabsArray objectAtIndex:index]];
+    [_reuseQueue addObject:_tabsArray[index]];
     [_tabsArray removeObject:tab];
     
     [tab removeFromSuperview];
     
     NSInteger tabIndex = 0;
     for (BrowserTab *tab in _tabsArray) {
-        
-        tab.index = tabIndex;
-        
+        tab.index = tabIndex;        
         tabIndex++;
-        
     }
     
     [self caculateFrame];
@@ -275,13 +277,13 @@ static NSString *kReuseIdentifier = @"UserIndentifier";
 
 - (void)caculateFrame
 {
-    const float overlapWidth = OVERLAP_WIDTH ;
-    CGFloat height = self.bounds.size.height;
+    const float overlapWidth = OVERLAP_WIDTH;
+    CGFloat height = CGRectGetHeight(self.bounds);
     CGFloat right = 0;
     
     [_tabFramesArray removeAllObjects];
     
-    for (NSInteger tabIndex = 0; tabIndex <self.numberOfTabs; tabIndex++) {
+    for (NSInteger tabIndex = 0; tabIndex < self.numberOfTabs; tabIndex++) {
         CGRect tabFrame = CGRectMake(right, 0, self.tabWidth, height - TAB_FOOTER_HEIGHT);
         [_tabFramesArray addObject:[NSValue valueWithCGRect:tabFrame]];
         right += (self.tabWidth - overlapWidth);
