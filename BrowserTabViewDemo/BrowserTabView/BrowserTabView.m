@@ -285,8 +285,12 @@ static NSString *kReuseIdentifier = @"UserIndentifier";
     }
     
     [self caculateFrame];
-    
-    [ self setSelectedTabIndex:newIndex animated:NO];
+    if(index == self.numberOfTabs){
+        [ self setSelectedTabIndex:newIndex animated:NO];
+    }
+    else{
+        [ self setSelectedTabIndex:newIndex animated:YES];
+    }
     
     if ([self.delegate respondsToSelector:@selector(BrowserTabView:didRemoveTabAtIndex:)]) {
         [self.delegate BrowserTabView:self didRemoveTabAtIndex:index];
