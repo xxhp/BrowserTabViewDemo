@@ -33,11 +33,6 @@
 
 #import "BrowserTab.h"
 
-//define width of a tab ,here is the width of the image used to render tab;
-
-#define TAB_WIDTH 154 
-#define TAB_HEIGHT 38 
-
 @interface BrowserTab () {
     NSString *__weak reuseIdentifier;
     BOOL previousSelected;
@@ -55,14 +50,13 @@
 - (id)initWithReuseIdentifier:(NSString *)aReuseIdentifier andDelegate:(id)aDelegate
 {
     if (self = [super initWithFrame:CGRectZero]) {
-        
+        _height = 38;
         _delegate = aDelegate;
         reuseIdentifier = aReuseIdentifier;
         self.normalTitleColor = [UIColor whiteColor];
         self.selectedTitleColor = [UIColor blackColor];
-        
-        self.tabSelectedImage = [UIImage imageNamed:@"tab_selected"]; 
-        self.tabNormalImage = [UIImage imageNamed:@"tab_normal"] ;
+        self.tabSelectedImage = [[UIImage imageNamed:@"tab_selected"] stretchableImageWithLeftCapWidth:40 topCapHeight:0];
+        self.tabNormalImage = [[UIImage imageNamed:@"tab_normal"] stretchableImageWithLeftCapWidth:40 topCapHeight:0] ;
         
         self.titleFont = [UIFont systemFontOfSize:16];
         
@@ -108,6 +102,11 @@
     return self;
 }
 
+- (void)setWidth:(CGFloat)width {
+    _width = width;
+    self.bounds = CGRectMake(0, 0, width, CGRectGetHeight(self.bounds));
+}
+
 - (void)setSelected:(BOOL)isSelected
 {
     _selected = isSelected;
@@ -123,6 +122,7 @@
         _imageViewClose.hidden = YES;
     }
 }
+
 - (void)prepareForReuse
 {
     self.titleField.text = nil;
@@ -138,7 +138,7 @@
     titleSize.width = CGRectGetWidth(self.bounds) - 30;
     _imageView.frame = self.bounds;
     self.titleField.frame = CGRectMake((self.bounds.size.width - titleSize.width)/2 , (self.bounds.size.height - titleSize.height)/2, titleSize.width,titleSize.height);
-    _imageViewClose.frame =  CGRectMake(self.bounds.origin.x+115, self.bounds.origin.y+12, 19, 18);
+    _imageViewClose.frame =  CGRectMake(CGRectGetMaxX(self.bounds) - 40, self.bounds.origin.y+12, 19, 18);
     [super layoutSubviews];
 }
 
@@ -157,7 +157,7 @@
 	if (self.delegate.numberOfTabs > 0) {
         UITouch *touch = [touches anyObject];
         CGFloat x = [touch locationInView:self].x;
-        if (x >120 && x <= TAB_WIDTH -8 && previousSelected) {
+        if (x > 0.8 * self.width && x <= self.width - 8 && previousSelected) {
             [self.delegate removeTabAtIndex:self.index animated:YES];
         }
     }

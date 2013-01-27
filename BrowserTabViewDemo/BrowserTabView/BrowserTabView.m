@@ -34,8 +34,7 @@
 
 //TODO:changed kDefaultFrame to support iPhone
 #define kDefaultFrame CGRectMake(0,0,1024,44)
-//define width of a tab ,here is the width of the image used to render tab;
-#define TAB_WIDTH 154 
+
 //define overlap width between tabs
 #define OVERLAP_WIDTH 15
 #define TAB_FOOTER_HEIGHT 5
@@ -58,19 +57,20 @@ static NSString *kReuseIdentifier = @"UserIndentifier";
 - (id)initWithTabTitles:(NSArray *)titles andDelegate:(id)aDelegate
 {
     if ([super init]) {
+        _tabWidth = 154;
         self.frame = kDefaultFrame;
-        _tabFramesArray = [[NSMutableArray alloc]initWithCapacity:0];
+        _tabFramesArray = [[NSMutableArray alloc] initWithCapacity:0];
         
-        self.tabViewBackImage = [UIImage imageNamed:@"tab_background.png"]; 
+        self.tabViewBackImage = [UIImage imageNamed:@"tab_background"]; 
         
         _tabsArray = [[NSMutableArray alloc] initWithCapacity:[titles count]];
         
         for (int i = 0;i< titles.count ;i++) {
-            BrowserTab *tab=[[BrowserTab alloc] initWithReuseIdentifier:kReuseIdentifier andDelegate:self];
+            BrowserTab *tab = [[BrowserTab alloc] initWithReuseIdentifier:kReuseIdentifier andDelegate:self];
+            tab.width = _tabWidth;
             tab.index = i;
-            tab.titleField.text = [titles objectAtIndex:i];
+            tab.titleField.text = titles[i];
             tab.delegate = self;
-            
             [_tabsArray addObject:tab];
         }
         
@@ -90,6 +90,14 @@ static NSString *kReuseIdentifier = @"UserIndentifier";
     return self;
 }
 
+- (void)setTabWidth:(CGFloat)tabWidth {
+    _tabWidth = tabWidth;
+    for (BrowserTab *tab in self.tabsArray) {
+        tab.width = tabWidth;
+    }
+    [self caculateFrame];
+    [self setSelectedTabIndex:_selectedTabIndex animated:NO];
+}
 - (NSUInteger)numberOfTabs
 {
 	return [self.tabsArray count];
@@ -179,7 +187,7 @@ static NSString *kReuseIdentifier = @"UserIndentifier";
 - (void)addTabWithTitle:(NSString *)title 
 {
     //if the new tab is about to be off the tab view's bounds , here simply not adding it ;
-    if (TAB_WIDTH *(self.numberOfTabs)> self.bounds.size.width) {
+    if (self.tabWidth * (self.numberOfTabs)> self.bounds.size.width) {
         return;
     }
     
@@ -215,14 +223,11 @@ static NSString *kReuseIdentifier = @"UserIndentifier";
     tab.selected = YES;
     
     [self setSelectedTabIndex:_selectedTabIndex animated:NO];
-    
-    
 }
 
 
--(void)removeTabAtIndex:(NSInteger)index animated:(BOOL)animated
+- (void)removeTabAtIndex:(NSInteger)index animated:(BOOL)animated
 {
-    
     if (index < 0 || index >= [_tabsArray count]) {
         return;
     }
@@ -264,10 +269,9 @@ static NSString *kReuseIdentifier = @"UserIndentifier";
     }
     
 }
--(void)caculateFrame
+
+- (void)caculateFrame
 {
-    // caculate and save frame for each tab
-    const CGFloat tabWidth =TAB_WIDTH;
     const float overlapWidth = OVERLAP_WIDTH ;
     CGFloat height = self.bounds.size.height;
     CGFloat right = 0;
@@ -275,27 +279,18 @@ static NSString *kReuseIdentifier = @"UserIndentifier";
     [_tabFramesArray removeAllObjects];
     
     for (NSInteger tabIndex = 0; tabIndex <self.numberOfTabs; tabIndex++) {
-        
-        
-        CGRect tabFrame = CGRectMake(right, 0, tabWidth, height- TAB_FOOTER_HEIGHT);
-        
+        CGRect tabFrame = CGRectMake(right, 0, self.tabWidth, height - TAB_FOOTER_HEIGHT);
         [_tabFramesArray addObject:[NSValue valueWithCGRect:tabFrame]];
-        
-        right += (tabWidth- overlapWidth);
-        
+        right += (self.tabWidth - overlapWidth);
     }
     
 }
 
-- (void)drawRect:(CGRect)rect
-{
-    // Drawing code
-    
+- (void)drawRect:(CGRect)rect {
     CGFloat height = self.bounds.size.height;
 	
     //left 5 dp to show the background, and give a look that tab has footer
 	[_tabViewBackImage drawInRect:CGRectMake(0, 0, self.frame.size.width, height - TAB_FOOTER_HEIGHT)];
-    
 }
 
 #pragma mark - UIPanGestureRecognizer
@@ -317,7 +312,7 @@ static NSString *kReuseIdentifier = @"UserIndentifier";
         if (center.x < self.bounds.size.width-5  &&  center.x > 5) {
             sender.view.center = center;
             [sender setTranslation:CGPointZero inView:self];
-            CGFloat width = TAB_WIDTH;
+            CGFloat width = self.tabWidth;
             // If more than half the tab width is moved, exchange the positions
             if (abs(center.x - width*panPosition - width/2) > width/2) {
                 NSUInteger nextPos = position.x > 0 ? panPosition+1 : panPosition-1;

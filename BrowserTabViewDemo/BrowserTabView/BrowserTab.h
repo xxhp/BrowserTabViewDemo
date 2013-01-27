@@ -48,6 +48,8 @@
 @property (weak, nonatomic, readonly) NSString *reuseIdentifier;
 @property (nonatomic, assign) NSInteger index;
 @property (nonatomic, weak) BrowserTabView *delegate;
+@property (nonatomic, assign) CGFloat width;
+@property (nonatomic, assign) CGFloat height;
 
 - (id)initWithReuseIdentifier:(NSString *)aReuseIdentifier andDelegate:(id)aDelegate;
 - (void)prepareForReuse;
