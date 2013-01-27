@@ -34,9 +34,10 @@
 
 @class BrowserTabView;
 
-@protocol BrowserTabViewDelegate<NSObject>
+@protocol BrowserTabViewDelegate <NSObject>
 
 @optional
+
 - (void)BrowserTabView:(BrowserTabView *)browserTabView didSelecedAtIndex:(NSUInteger)index;
 - (void)BrowserTabView:(BrowserTabView *)browserTabView willRemoveTabAtIndex:(NSUInteger)index;
 - (void)BrowserTabView:(BrowserTabView *)browserTabView didRemoveTabAtIndex:(NSUInteger)index;
@@ -45,20 +46,19 @@
 
 @end
 
-@interface BrowserTabView : UIView<UIGestureRecognizerDelegate, UITextFieldDelegate>
+@interface BrowserTabView : UIView <UIGestureRecognizerDelegate, UITextFieldDelegate>
 
-@property(nonatomic, strong) UIImage *tabViewBackImage;
-@property(nonatomic, assign) NSUInteger numberOfTabs;
-@property(nonatomic, assign) NSInteger selectedTabIndex;
-@property(nonatomic, strong) NSMutableArray *tabsArray;
-@property(nonatomic, strong) NSMutableArray *tabFramesArray;
+@property (nonatomic, strong) UIImage *backgroundImage;
+@property (nonatomic, readonly) NSUInteger numberOfTabs;
+@property (nonatomic, readonly) NSInteger selectedTabIndex;
+
 @property (nonatomic, assign) CGFloat tabWidth;
-@property(nonatomic, readonly) NSMutableArray *reuseQueue;
-@property(nonatomic, weak) id<BrowserTabViewDelegate> delegate;
+@property (nonatomic, readonly) NSMutableArray *reuseQueue;
+@property (nonatomic, weak) id<BrowserTabViewDelegate> delegate;
 
--(id)initWithTabTitles:(NSArray *)titles andDelegate:(id)adelegate;
--(void)addTabWithTitle:(NSString *)title;
--(void)setSelectedTabIndex:(NSInteger)aSelectedTabIndex animated:(BOOL)animation;
--(void)removeTabAtIndex:(NSInteger)index animated:(BOOL)animated;
+- (id)initWithTabTitles:(NSArray *)titles andDelegate:(id)adelegate;
+- (void)addTabWithTitle:(NSString *)title;
+- (void)setSelectedTabIndex:(NSInteger)aSelectedTabIndex animated:(BOOL)animation;
+- (void)removeTabAtIndex:(NSInteger)index animated:(BOOL)animated;
 
 @end

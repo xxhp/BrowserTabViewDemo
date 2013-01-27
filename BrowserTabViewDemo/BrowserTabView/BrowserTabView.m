@@ -46,6 +46,9 @@ static NSString *kReuseIdentifier = @"UserIndentifier";
 
 @interface BrowserTabView ()
 
+@property(nonatomic, strong) NSMutableArray *tabsArray;
+@property(nonatomic, strong) NSMutableArray *tabFramesArray;
+
 - (void)caculateFrame;
 
 @end
@@ -61,7 +64,7 @@ static NSString *kReuseIdentifier = @"UserIndentifier";
         self.frame = kDefaultFrame;
         _tabFramesArray = [[NSMutableArray alloc] initWithCapacity:0];
         
-        self.tabViewBackImage = [UIImage imageNamed:@"tab_background"]; 
+        self.backgroundImage = [UIImage imageNamed:@"tab_background"]; 
         
         _tabsArray = [[NSMutableArray alloc] initWithCapacity:[titles count]];
         
@@ -290,7 +293,7 @@ static NSString *kReuseIdentifier = @"UserIndentifier";
     CGFloat height = self.bounds.size.height;
 	
     //left 5 dp to show the background, and give a look that tab has footer
-	[_tabViewBackImage drawInRect:CGRectMake(0, 0, self.frame.size.width, height - TAB_FOOTER_HEIGHT)];
+	[_backgroundImage drawInRect:CGRectMake(0, 0, self.frame.size.width, height - TAB_FOOTER_HEIGHT)];
 }
 
 #pragma mark - UIPanGestureRecognizer
