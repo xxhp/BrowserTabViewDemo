@@ -32,149 +32,137 @@
 //
 
 #import "BrowserTab.h"
-//define width of a tab ,here is the width of the image used to render tab;
-#define TAB_WIDTH 154 
-#define TAB_HEIGHT 38 
-@implementation BrowserTab
-@synthesize title;
-@synthesize titleFont;
-@synthesize selected=_selected;
-@synthesize tabNormalImage;
-@synthesize tabSelectedImage;
-@synthesize normalTitleColor;
-@synthesize selectedTitleColor;
-@synthesize reuseIdentifier;
-@synthesize imageView;
-@synthesize imageViewClose;
-@synthesize textLabel;
-@synthesize index;
-@synthesize delegate;
+#import "BrowserTabView.h"
 
-#pragma mark -
-#pragma mark init
--(id)initWithReuseIdentifier:(NSString *)aReuseIdentifier andDelegate:(id)aDelegate
+@interface BrowserTab () {
+    NSString *__weak reuseIdentifier;
+    BOOL previousSelected;
+}
+
+@property (nonatomic, strong) UIButton *closeButton;
+@property (nonatomic, strong) UIImageView *imageView;
+
+@end
+
+@implementation BrowserTab
+
+@synthesize reuseIdentifier;
+
+#pragma mark - init
+
+- (id)initWithReuseIdentifier:(NSString *)aReuseIdentifier andDelegate:(id)aDelegate
 {
-    self = [super initWithFrame:CGRectZero];
-    if (self) {
-        
-        delegate = aDelegate;
-        reuseIdentifier = [aReuseIdentifier retain];
+    if (self = [super initWithFrame:CGRectZero]) {
+        _height = 38;
+        _delegate = aDelegate;
+        reuseIdentifier = aReuseIdentifier;
         self.normalTitleColor = [UIColor whiteColor];
         self.selectedTitleColor = [UIColor blackColor];
+        self.tabSelectedImage = [[UIImage imageNamed:@"tab_selected"] stretchableImageWithLeftCapWidth:40 topCapHeight:0];
+        self.tabNormalImage = [[UIImage imageNamed:@"tab_normal"] stretchableImageWithLeftCapWidth:40 topCapHeight:0] ;
         
-        self.tabSelectedImage = [UIImage imageNamed:@"tab_selected.png"]; 
-        self.tabNormalImage = [UIImage imageNamed:@"tab_normal.png"] ;
+        self.titleFont = [UIFont systemFontOfSize:16];
         
-        
-        
-        self.titleFont = [UIFont systemFontOfSize:18];
-        
-        imageView = [[UIImageView alloc] initWithFrame:self.bounds];
+        _imageView = [[UIImageView alloc] initWithFrame:self.bounds];
         
         self.imageView.backgroundColor = [UIColor clearColor];
         
         self.backgroundColor = [UIColor clearColor];
         
-        [self addSubview:imageView];
+        [self addSubview:_imageView];
         
-        textLabel = [[UILabel alloc] initWithFrame:self.bounds];
-        textLabel.textAlignment = UITextAlignmentCenter;
+        _titleField = [[UITextField alloc] initWithFrame:self.bounds];
+        _titleField.textAlignment = UITextAlignmentCenter;
+        _titleField.enabled = NO;
+        _titleField.delegate = _delegate;
+        _titleField.returnKeyType = UIReturnKeyDone;
         
+        self.titleField.backgroundColor = [UIColor clearColor];
         
-        self.textLabel.backgroundColor = [UIColor clearColor];
-        
-        imageViewClose = [[UIImageView alloc] initWithFrame:self.bounds];
-        
-        self.imageViewClose.backgroundColor = [UIColor clearColor];
-        imageViewClose.image = [UIImage imageNamed:@"tab_close.png"];
-        imageViewClose.hidden = YES;
+        _closeButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        [_closeButton setImage:[UIImage imageNamed:@"tab_close.png"] forState:UIControlStateNormal];
+        _closeButton.hidden = YES;
+        [_closeButton addTarget:self action:@selector(onCloseTap:) forControlEvents:UIControlEventTouchUpInside];
         
         self.backgroundColor = [UIColor clearColor];
         
-        [self addSubview:imageViewClose];
-        [self addSubview:textLabel]; 
+        [self addSubview:_closeButton];
+        [self addSubview:_titleField];
         
         [self setSelected:YES];
-        panGuesture = [[UIPanGestureRecognizer alloc] initWithTarget:delegate    
+        UIPanGestureRecognizer *panGuesture = [[UIPanGestureRecognizer alloc] initWithTarget:_delegate
                                                        action:@selector(handlePanGuesture:)];
-        panGuesture.delegate = delegate;
+        panGuesture.delegate = _delegate;
         [self addGestureRecognizer:panGuesture];
+        
+        UILongPressGestureRecognizer *longPressGR = [[UILongPressGestureRecognizer alloc] initWithTarget:_delegate action:@selector(handleLongPress:)];
+        longPressGR.allowableMovement = 5.f;
+        longPressGR.minimumPressDuration = 0.7f;
+        [self addGestureRecognizer:longPressGR];
         
     }
     return self;
 }
 
--(void)setSelected:(BOOL)isSelected
+- (void)setWidth:(CGFloat)width {
+    _width = width;
+    self.bounds = CGRectMake(0, 0, width, CGRectGetHeight(self.bounds));
+}
+
+- (void)setCloseButtonImage:(UIImage *)closeButtonImage {
+    [self.closeButton setImage:closeButtonImage forState:UIControlStateNormal];
+}
+
+- (void)setSelected:(BOOL)isSelected
 {
     _selected = isSelected;
     
     if (isSelected) {
-        self.textLabel.textColor = selectedTitleColor;
-        imageView.image = self.tabSelectedImage;
-        if (self.delegate.numberOfTabs>1) {
-            imageViewClose.hidden = NO;
-        }else{
-            imageViewClose.hidden = YES;
-        }
+        self.titleField.textColor = _selectedTitleColor;
+        _imageView.image = self.tabSelectedImage;
+        _closeButton.hidden = !(self.delegate.numberOfTabs > 1);
         
     }else{
-        self.textLabel.textColor = normalTitleColor;
-        imageView.image = self.tabNormalImage;
-        imageViewClose.hidden = YES;    
+        self.titleField.textColor = _normalTitleColor;
+        _imageView.image = self.tabNormalImage;
+        _closeButton.hidden = YES;
     }
 }
--(void)prepareForReuse
+
+- (void)prepareForReuse
 {
-    self.textLabel.text = nil;
+    self.titleField.text = nil;
     self.index = 0;
     self.delegate = nil;
     _selected = NO;    
 }
-/*
-// Only override drawRect: if you perform custom drawing.
-// An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect
-{
-    
-}
-*/
 
--(void)layoutSubviews
+- (void)layoutSubviews
 {
-    title = self.textLabel.text;
-    CGSize titleSize = [title sizeWithFont:titleFont];
-    imageView.frame = self.bounds;
-    
-    self.textLabel.frame = CGRectMake((self.bounds.size.width - titleSize.width)/2 , (self.bounds.size.height - titleSize.height)/2, titleSize.width,titleSize.height);
-       
-    imageViewClose.frame =  CGRectMake(self.bounds.origin.x+115, self.bounds.origin.y+12, 19, 18);
-    
+    _title = self.titleField.text;
+    CGSize titleSize = [_title sizeWithFont:_titleFont];
+    titleSize.width = CGRectGetWidth(self.bounds) - 30;
+    _imageView.frame = self.bounds;
+    self.titleField.frame = CGRectMake((self.bounds.size.width - titleSize.width)/2 , (self.bounds.size.height - titleSize.height)/2, titleSize.width,titleSize.height);
+    _closeButton.frame =  CGRectMake(CGRectGetMaxX(self.bounds) - 50, 0, 44, 44);
     [super layoutSubviews];
 }
 
 
-#pragma mark -
 #pragma mark - TouchEvent
 
--(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
-{
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
     previousSelected =  _selected;
     [self setSelected:YES];
     [self.delegate setSelectedTabIndex:self.index animated:NO];
-
-    
 }
 
+#pragma mark - Actions
 
-- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
-{
-	[super touchesEnded:touches withEvent:event];
-	if (self.delegate.numberOfTabs > 0) {
-        UITouch *touch = [touches anyObject];
-        CGFloat x = [touch locationInView:self].x;
-        if (x >120 && x <= TAB_WIDTH -8 && previousSelected) {
-            [self.delegate removeTabAtIndex:self.index animated:YES];
-        }
+- (void)onCloseTap:(id)sender {
+    if (self.delegate.numberOfTabs > 0) {
+        [self.delegate removeTabAtIndex:self.index animated:YES];
     }
 }
+
 @end

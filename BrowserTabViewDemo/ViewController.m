@@ -11,21 +11,14 @@
 @implementation ViewController
 @synthesize label;
 
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Release any cached data, images, etc that aren't in use.
-}
-
 #pragma mark - View lifecycle
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-	// Do any additional setup after loading the view, typically from a nib.
     tabController= [[BrowserTabView alloc] initWithTabTitles:[NSArray arrayWithObjects:@"Tab 1",@"Tab 2",@"Tab 3", nil]
                                                  andDelegate:self];
-    tabController.delegate = self;
+    tabController.tabWidth = 250;
     
     UIButton *addButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [addButton setImage:[UIImage imageNamed:@"tab_new_add.png"] forState:UIControlStateNormal];
@@ -46,40 +39,27 @@
     // e.g. self.myOutlet = nil;
 }
 
-- (void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
-}
-
-- (void)viewDidAppear:(BOOL)animated
-{
-    [super viewDidAppear:animated];
-}
-
-- (void)viewWillDisappear:(BOOL)animated
-{
-	[super viewWillDisappear:animated];
-}
-
-- (void)viewDidDisappear:(BOOL)animated
-{
-	[super viewDidDisappear:animated];
-}
-
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
-    // Return YES for supported orientations
-    return UIInterfaceOrientationIsLandscape(interfaceOrientation);
+    return YES;
 }
+
 -(void)add:(id)sender
 {
     [tabController addTabWithTitle:nil];
 }
+
 #pragma mark -
 #pragma mark BrowserTabViewDelegate
 -(void)BrowserTabView:(BrowserTabView *)browserTabView didSelecedAtIndex:(NSUInteger)index
 {
+    NSLog(@"BrowserTabView select Tab at index:  %d",index);
     self.label.text = [NSString stringWithFormat:@"Tab selected at: %d",index +1];
+}
+
+-(void)BrowserTabView:(BrowserTabView *)browserTabView willRemoveTabAtIndex:(NSUInteger)index {
+    NSLog(@"BrowserTabView WILL Remove Tab at index:  %d",index);
+
 }
 
 -(void)BrowserTabView:(BrowserTabView *)browserTabView didRemoveTabAtIndex:(NSUInteger)index{
@@ -90,6 +70,12 @@
  NSLog(@"BrowserTabView exchange Tab  at index:  %d with Tab at index :%d ",fromIndex,toIndex);
 }
 
+- (BOOL)browserTabView:(BrowserTabView *)tabView shouldChangeTitle:(NSString *)title {
+    if (title.length) {
+        return YES;
+    };
+    return NO;
+}
 
 - (void)dealloc {
     [label release];
