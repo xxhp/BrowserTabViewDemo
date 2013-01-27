@@ -32,12 +32,15 @@
 //
 
 #import "BrowserTab.h"
+#import "BrowserTabView.h"
 
 @interface BrowserTab () {
     NSString *__weak reuseIdentifier;
     BOOL previousSelected;
-    UIPanGestureRecognizer *panGuesture;
 }
+
+@property (nonatomic, strong) UIButton *closeButton;
+@property (nonatomic, strong) UIImageView *imageView;
 
 @end
 
@@ -76,19 +79,18 @@
         
         self.titleField.backgroundColor = [UIColor clearColor];
         
-        _imageViewClose = [[UIImageView alloc] initWithFrame:self.bounds];
-        
-        self.imageViewClose.backgroundColor = [UIColor clearColor];
-        _imageViewClose.image = [UIImage imageNamed:@"tab_close.png"];
-        _imageViewClose.hidden = YES;
+        _closeButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        [_closeButton setImage:[UIImage imageNamed:@"tab_close.png"] forState:UIControlStateNormal];
+        _closeButton.hidden = YES;
+        [_closeButton addTarget:self action:@selector(onCloseTap:) forControlEvents:UIControlEventTouchUpInside];
         
         self.backgroundColor = [UIColor clearColor];
         
-        [self addSubview:_imageViewClose];
+        [self addSubview:_closeButton];
         [self addSubview:_titleField];
         
         [self setSelected:YES];
-        panGuesture = [[UIPanGestureRecognizer alloc] initWithTarget:_delegate
+        UIPanGestureRecognizer *panGuesture = [[UIPanGestureRecognizer alloc] initWithTarget:_delegate
                                                        action:@selector(handlePanGuesture:)];
         panGuesture.delegate = _delegate;
         [self addGestureRecognizer:panGuesture];
@@ -107,6 +109,10 @@
     self.bounds = CGRectMake(0, 0, width, CGRectGetHeight(self.bounds));
 }
 
+- (void)setCloseButtonImage:(UIImage *)closeButtonImage {
+    [self.closeButton setImage:closeButtonImage forState:UIControlStateNormal];
+}
+
 - (void)setSelected:(BOOL)isSelected
 {
     _selected = isSelected;
@@ -114,12 +120,12 @@
     if (isSelected) {
         self.titleField.textColor = _selectedTitleColor;
         _imageView.image = self.tabSelectedImage;
-        _imageViewClose.hidden = !(self.delegate.numberOfTabs > 1);
+        _closeButton.hidden = !(self.delegate.numberOfTabs > 1);
         
     }else{
         self.titleField.textColor = _normalTitleColor;
         _imageView.image = self.tabNormalImage;
-        _imageViewClose.hidden = YES;
+        _closeButton.hidden = YES;
     }
 }
 
@@ -138,7 +144,7 @@
     titleSize.width = CGRectGetWidth(self.bounds) - 30;
     _imageView.frame = self.bounds;
     self.titleField.frame = CGRectMake((self.bounds.size.width - titleSize.width)/2 , (self.bounds.size.height - titleSize.height)/2, titleSize.width,titleSize.height);
-    _imageViewClose.frame =  CGRectMake(CGRectGetMaxX(self.bounds) - 40, self.bounds.origin.y+12, 19, 18);
+    _closeButton.frame =  CGRectMake(CGRectGetMaxX(self.bounds) - 50, 0, 44, 44);
     [super layoutSubviews];
 }
 
@@ -151,15 +157,11 @@
     [self.delegate setSelectedTabIndex:self.index animated:NO];
 }
 
+#pragma mark - Actions
 
-- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
-	[super touchesEnded:touches withEvent:event];
-	if (self.delegate.numberOfTabs > 0) {
-        UITouch *touch = [touches anyObject];
-        CGFloat x = [touch locationInView:self].x;
-        if (x > 0.8 * self.width && x <= self.width - 8 && previousSelected) {
-            [self.delegate removeTabAtIndex:self.index animated:YES];
-        }
+- (void)onCloseTap:(id)sender {
+    if (self.delegate.numberOfTabs > 0) {
+        [self.delegate removeTabAtIndex:self.index animated:YES];
     }
 }
 

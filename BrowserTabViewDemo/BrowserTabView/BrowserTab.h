@@ -31,7 +31,8 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "BrowserTabView.h"
+
+@class BrowserTabView;
 
 @interface BrowserTab : UIView 
 
@@ -42,14 +43,14 @@
 @property (nonatomic, strong) UIImage *tabNormalImage;
 @property (nonatomic, strong) UIColor *normalTitleColor;
 @property (nonatomic, strong) UIColor *selectedTitleColor;
-@property (nonatomic, strong) UIImageView *imageView;;
 @property (nonatomic, strong) UITextField *titleField;
-@property (nonatomic, strong) UIImageView *imageViewClose;
+@property (nonatomic, strong) UIImage *closeButtonImage;
 @property (weak, nonatomic, readonly) NSString *reuseIdentifier;
 @property (nonatomic, assign) NSInteger index;
-@property (nonatomic, weak) BrowserTabView *delegate;
 @property (nonatomic, assign) CGFloat width;
 @property (nonatomic, assign) CGFloat height;
+
+@property (nonatomic, weak) BrowserTabView *delegate;
 
 - (id)initWithReuseIdentifier:(NSString *)aReuseIdentifier andDelegate:(id)aDelegate;
 - (void)prepareForReuse;
