@@ -79,6 +79,7 @@
 #pragma mark BrowserTabViewDelegate
 -(void)BrowserTabView:(BrowserTabView *)browserTabView didSelecedAtIndex:(NSUInteger)index
 {
+    NSLog(@"BrowserTabView select Tab at index:  %d",index);
     self.label.text = [NSString stringWithFormat:@"Tab selected at: %d",index +1];
 }
 

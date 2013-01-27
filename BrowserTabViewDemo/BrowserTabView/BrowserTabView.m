@@ -97,8 +97,10 @@ static NSString *kReuseIdentifier = @"UserIndentifier";
 
 - (void)setSelectedTabIndex:(NSInteger)aSelectedTabIndex animated:(BOOL)animation
 {
+    BOOL selectNewPage= aSelectedTabIndex != _selectedTabIndex;
+    
     _selectedTabIndex = aSelectedTabIndex;
-    if ([self.delegate respondsToSelector:@selector(BrowserTabView:didSelecedAtIndex:)]) {
+    if ([self.delegate respondsToSelector:@selector(BrowserTabView:didSelecedAtIndex:)] && selectNewPage) {
         [self.delegate BrowserTabView:self didSelecedAtIndex:aSelectedTabIndex];
     }
     
