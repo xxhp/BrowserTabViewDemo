@@ -45,7 +45,7 @@ static NSString *kReuseIdentifier = @"UserIndentifier";
 #import "BrowserTabView.h"
 #import "BrowserTab.h"
 
-@interface BrowserTabView()
+@interface BrowserTabView ()
 
 - (void)caculateFrame;
 
@@ -53,8 +53,8 @@ static NSString *kReuseIdentifier = @"UserIndentifier";
 
 @implementation BrowserTabView
 
-
 #pragma mark - init
+
 - (id)initWithTabTitles:(NSArray *)titles andDelegate:(id)aDelegate
 {
     if ([super init]) {
@@ -68,7 +68,7 @@ static NSString *kReuseIdentifier = @"UserIndentifier";
         for (int i = 0;i< titles.count ;i++) {
             BrowserTab *tab=[[BrowserTab alloc] initWithReuseIdentifier:kReuseIdentifier andDelegate:self];
             tab.index = i;
-            tab.textLabel.text = [titles objectAtIndex:i];
+            tab.titleField.text = [titles objectAtIndex:i];
             tab.delegate = self;
             
             [_tabsArray addObject:tab];
@@ -192,7 +192,7 @@ static NSString *kReuseIdentifier = @"UserIndentifier";
         
         tab = [[BrowserTab alloc] initWithReuseIdentifier:kReuseIdentifier andDelegate:self];
     }
-    tab.textLabel.text = title;
+    tab.titleField.text = title;
     tab.frame = CGRectZero;
 
 	[self.tabsArray addObject:tab];
@@ -356,6 +356,31 @@ static NSString *kReuseIdentifier = @"UserIndentifier";
             [self setSelectedTabIndex:_selectedTabIndex animated:YES];
         }];
     }
+}
+
+#pragma mark - LongTap
+
+- (void)handleLongPress:(UILongPressGestureRecognizer *)gr {
+    if (gr.state == UIGestureRecognizerStateRecognized) {
+        BrowserTab *tab = (BrowserTab *)[gr view];
+        tab.titleField.enabled = YES;
+        [tab.titleField becomeFirstResponder];
+    }
+}
+
+#pragma mark - UITextFieldDelegate
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField {
+    BOOL result = YES;
+    if ([self.delegate respondsToSelector:@selector(browserTabView:shouldChangeTitle:)]) {
+        result = [self.delegate browserTabView:self shouldChangeTitle:textField.text];
+    }
+    if (result) {
+        BrowserTab *tab = self.tabsArray[_selectedTabIndex];
+        tab.title = textField.text;
+        textField.enabled = NO;
+    }
+    return result;
 }
 
 @end

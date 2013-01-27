@@ -43,7 +43,7 @@
 @property (nonatomic, strong) UIColor *normalTitleColor;
 @property (nonatomic, strong) UIColor *selectedTitleColor;
 @property (nonatomic, strong) UIImageView *imageView;;
-@property (nonatomic, strong) UILabel *textLabel;
+@property (nonatomic, strong) UITextField *titleField;
 @property (nonatomic, strong) UIImageView *imageViewClose;
 @property (weak, nonatomic, readonly) NSString *reuseIdentifier;
 @property (nonatomic, assign) NSInteger index;

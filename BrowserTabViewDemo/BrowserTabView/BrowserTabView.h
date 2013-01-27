@@ -37,13 +37,15 @@
 @protocol BrowserTabViewDelegate<NSObject>
 
 @optional
--(void)BrowserTabView:(BrowserTabView *)browserTabView didSelecedAtIndex:(NSUInteger)index;
--(void)BrowserTabView:(BrowserTabView *)browserTabView willRemoveTabAtIndex:(NSUInteger)index;
--(void)BrowserTabView:(BrowserTabView *)browserTabView didRemoveTabAtIndex:(NSUInteger)index;
--(void)BrowserTabView:(BrowserTabView *)browserTabView exchangeTabAtIndex:(NSUInteger)fromIndex withTabAtIndex:(NSUInteger)toIndex;
+- (void)BrowserTabView:(BrowserTabView *)browserTabView didSelecedAtIndex:(NSUInteger)index;
+- (void)BrowserTabView:(BrowserTabView *)browserTabView willRemoveTabAtIndex:(NSUInteger)index;
+- (void)BrowserTabView:(BrowserTabView *)browserTabView didRemoveTabAtIndex:(NSUInteger)index;
+- (void)BrowserTabView:(BrowserTabView *)browserTabView exchangeTabAtIndex:(NSUInteger)fromIndex withTabAtIndex:(NSUInteger)toIndex;
+- (BOOL)browserTabView:(BrowserTabView *)tabView shouldChangeTitle:(NSString *)title;
+
 @end
 
-@interface BrowserTabView : UIView<UIGestureRecognizerDelegate>
+@interface BrowserTabView : UIView<UIGestureRecognizerDelegate, UITextFieldDelegate>
 
 @property(nonatomic, strong) UIImage *tabViewBackImage;
 @property(nonatomic, assign) NSUInteger numberOfTabs;

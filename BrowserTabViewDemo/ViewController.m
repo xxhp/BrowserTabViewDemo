@@ -95,6 +95,12 @@
  NSLog(@"BrowserTabView exchange Tab  at index:  %d with Tab at index :%d ",fromIndex,toIndex);
 }
 
+- (BOOL)browserTabView:(BrowserTabView *)tabView shouldChangeTitle:(NSString *)title {
+    if (title.length) {
+        return YES;
+    };
+    return NO;
+}
 
 - (void)dealloc {
     [label release];

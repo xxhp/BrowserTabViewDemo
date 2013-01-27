@@ -51,9 +51,9 @@
 @synthesize reuseIdentifier;
 
 #pragma mark - init
+
 - (id)initWithReuseIdentifier:(NSString *)aReuseIdentifier andDelegate:(id)aDelegate
 {
-
     if (self = [super initWithFrame:CGRectZero]) {
         
         _delegate = aDelegate;
@@ -61,12 +61,10 @@
         self.normalTitleColor = [UIColor whiteColor];
         self.selectedTitleColor = [UIColor blackColor];
         
-        self.tabSelectedImage = [UIImage imageNamed:@"tab_selected.png"]; 
-        self.tabNormalImage = [UIImage imageNamed:@"tab_normal.png"] ;
+        self.tabSelectedImage = [UIImage imageNamed:@"tab_selected"]; 
+        self.tabNormalImage = [UIImage imageNamed:@"tab_normal"] ;
         
-        
-        
-        self.titleFont = [UIFont systemFontOfSize:18];
+        self.titleFont = [UIFont systemFontOfSize:16];
         
         _imageView = [[UIImageView alloc] initWithFrame:self.bounds];
         
@@ -76,11 +74,13 @@
         
         [self addSubview:_imageView];
         
-        _textLabel = [[UILabel alloc] initWithFrame:self.bounds];
-        _textLabel.textAlignment = UITextAlignmentCenter;
+        _titleField = [[UITextField alloc] initWithFrame:self.bounds];
+        _titleField.textAlignment = UITextAlignmentCenter;
+        _titleField.enabled = NO;
+        _titleField.delegate = _delegate;
+        _titleField.returnKeyType = UIReturnKeyDone;
         
-        
-        self.textLabel.backgroundColor = [UIColor clearColor];
+        self.titleField.backgroundColor = [UIColor clearColor];
         
         _imageViewClose = [[UIImageView alloc] initWithFrame:self.bounds];
         
@@ -91,7 +91,7 @@
         self.backgroundColor = [UIColor clearColor];
         
         [self addSubview:_imageViewClose];
-        [self addSubview:_textLabel];
+        [self addSubview:_titleField];
         
         [self setSelected:YES];
         panGuesture = [[UIPanGestureRecognizer alloc] initWithTarget:_delegate
@@ -99,64 +99,60 @@
         panGuesture.delegate = _delegate;
         [self addGestureRecognizer:panGuesture];
         
+        UILongPressGestureRecognizer *longPressGR = [[UILongPressGestureRecognizer alloc] initWithTarget:_delegate action:@selector(handleLongPress:)];
+        longPressGR.allowableMovement = 5.f;
+        longPressGR.minimumPressDuration = 0.7f;
+        [self addGestureRecognizer:longPressGR];
+        
     }
     return self;
 }
 
--(void)setSelected:(BOOL)isSelected
+- (void)setSelected:(BOOL)isSelected
 {
     _selected = isSelected;
     
     if (isSelected) {
-        self.textLabel.textColor = _selectedTitleColor;
+        self.titleField.textColor = _selectedTitleColor;
         _imageView.image = self.tabSelectedImage;
-        if (self.delegate.numberOfTabs>1) {
-            _imageViewClose.hidden = NO;
-        }else{
-            _imageViewClose.hidden = YES;
-        }
+        _imageViewClose.hidden = !(self.delegate.numberOfTabs > 1);
         
     }else{
-        self.textLabel.textColor = _normalTitleColor;
+        self.titleField.textColor = _normalTitleColor;
         _imageView.image = self.tabNormalImage;
         _imageViewClose.hidden = YES;
     }
 }
--(void)prepareForReuse
+- (void)prepareForReuse
 {
-    self.textLabel.text = nil;
+    self.titleField.text = nil;
     self.index = 0;
     self.delegate = nil;
     _selected = NO;    
 }
 
--(void)layoutSubviews
+- (void)layoutSubviews
 {
-    _title = self.textLabel.text;
+    _title = self.titleField.text;
     CGSize titleSize = [_title sizeWithFont:_titleFont];
+    titleSize.width = CGRectGetWidth(self.bounds) - 30;
     _imageView.frame = self.bounds;
-    
-    self.textLabel.frame = CGRectMake((self.bounds.size.width - titleSize.width)/2 , (self.bounds.size.height - titleSize.height)/2, titleSize.width,titleSize.height);
-       
+    self.titleField.frame = CGRectMake((self.bounds.size.width - titleSize.width)/2 , (self.bounds.size.height - titleSize.height)/2, titleSize.width,titleSize.height);
     _imageViewClose.frame =  CGRectMake(self.bounds.origin.x+115, self.bounds.origin.y+12, 19, 18);
-    
     [super layoutSubviews];
 }
 
 
-#pragma mark -
 #pragma mark - TouchEvent
 
--(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
-{
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
     previousSelected =  _selected;
     [self setSelected:YES];
     [self.delegate setSelectedTabIndex:self.index animated:NO];
 }
 
 
-- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
-{
+- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
 	[super touchesEnded:touches withEvent:event];
 	if (self.delegate.numberOfTabs > 0) {
         UITouch *touch = [touches anyObject];
@@ -166,4 +162,5 @@
         }
     }
 }
+
 @end
