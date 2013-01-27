@@ -1,6 +1,7 @@
 BrowserTabView
 
 The BrowserTabView is a browser-style tabview controller looks like the Dolphin Browser,you can add or remove tab dynamically,and it also support panning and dragging  ,you can exchange tab positions.It gives you a overlapping-look tabview and displays the tabs by rendering images, so if you want to do some custom, simply replace these images.  
+I also want to thanks Denis Lebedev(https://github.com/garnett) for his great work and idea, added ARC surport ,bug fixed,and possibility to rename tabs after long press, etc.
 
 License
 
