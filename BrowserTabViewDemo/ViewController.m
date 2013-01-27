@@ -18,7 +18,7 @@
     [super viewDidLoad];
     tabController= [[BrowserTabView alloc] initWithTabTitles:[NSArray arrayWithObjects:@"Tab 1",@"Tab 2",@"Tab 3", nil]
                                                  andDelegate:self];
-    tabController.tabWidth = 250;
+//    tabController.tabWidth = 250;
     
     UIButton *addButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [addButton setImage:[UIImage imageNamed:@"tab_new_add.png"] forState:UIControlStateNormal];

@@ -1,6 +1,6 @@
 //
 //  BrowserTabController.m
-// 
+//
 //  BrowserTab.m
 //  BrowserTabDemo
 //
@@ -38,6 +38,7 @@
 //define overlap width between tabs
 #define OVERLAP_WIDTH 15
 #define TAB_FOOTER_HEIGHT 5
+#define DEFAULT_TAB_WIDTH 154
 
 static NSString *kReuseIdentifier = @"UserIndentifier";
 
@@ -60,11 +61,14 @@ static NSString *kReuseIdentifier = @"UserIndentifier";
 - (id)initWithTabTitles:(NSArray *)titles andDelegate:(id)aDelegate
 {
     if ([super init]) {
-        _tabWidth = 154;
+        
+        
+        
         self.frame = kDefaultFrame;
+        
         _tabFramesArray = [[NSMutableArray alloc] initWithCapacity:0];
         
-        self.backgroundImage = [UIImage imageNamed:@"tab_background"]; 
+        self.backgroundImage = [UIImage imageNamed:@"tab_background"];
         
         _tabsArray = [[NSMutableArray alloc] initWithCapacity:[titles count]];
         
@@ -79,7 +83,11 @@ static NSString *kReuseIdentifier = @"UserIndentifier";
         
         //background color is the same color of tab when been selected.
         self.backgroundColor =[UIColor colorWithRed:242.0/255 green:242.0/255 blue:242.0/255 alpha:1];
+        _tabWidth = self.bounds.size.width /(_tabsArray.count+1);
         
+        if (_tabWidth < DEFAULT_TAB_WIDTH) {
+            _tabWidth = DEFAULT_TAB_WIDTH;
+        }
         [self caculateFrame];
         
         _reuseQueue = [[NSMutableArray alloc] init];
@@ -153,7 +161,7 @@ static NSString *kReuseIdentifier = @"UserIndentifier";
         if (animation) {
             [UIView beginAnimations:nil context:nil];
             tab.frame = tabFrame;
-            [UIView commitAnimations]; 
+            [UIView commitAnimations];
         }else{
             tab.frame = tabFrame;
             
@@ -180,21 +188,29 @@ static NSString *kReuseIdentifier = @"UserIndentifier";
     if (reuseTab != nil) {
         [_reuseQueue removeObject:reuseTab];
     }
-
+    
     [reuseTab prepareForReuse];
     
     return reuseTab;
     
 }
 
-- (void)addTabWithTitle:(NSString *)title 
+- (void)addTabWithTitle:(NSString *)title
 {
     //if the new tab is about to be off the tab view's bounds , here simply not adding it ;
-    if (self.tabWidth * (self.numberOfTabs)> self.bounds.size.width) {
-        return;
+    if (self.tabWidth < DEFAULT_TAB_WIDTH) {
+        self.tabWidth = DEFAULT_TAB_WIDTH;
+    }
+    if (self.tabWidth >DEFAULT_TAB_WIDTH) {
+        self.tabWidth = DEFAULT_TAB_WIDTH;
     }
     
-	if (!title) {
+    if (self.tabWidth * (self.numberOfTabs+1) - OVERLAP_WIDTH * (self.numberOfTabs -1)> self.bounds.size.width) {
+        return;
+    }else{
+        _tabWidth = self.bounds.size.width /(self.numberOfTabs+1);
+    }
+    if (!title) {
 		title = @"new Tab";
 	}
     
@@ -207,7 +223,7 @@ static NSString *kReuseIdentifier = @"UserIndentifier";
     }
     tab.titleField.text = title;
     tab.frame = CGRectZero;
-
+    
 	[self.tabsArray addObject:tab];
     
     for (int i = 0; i < [_tabsArray count]; i++) {
@@ -237,6 +253,10 @@ static NSString *kReuseIdentifier = @"UserIndentifier";
     BrowserTab *tab = [_tabsArray objectAtIndex:index];
     //the last one tab not allowed to remove,return;
     NSUInteger newIndex = tab.index;
+    
+    
+    
+    
     if (self.numberOfTabs == 1 || !self.numberOfTabs) {
         return;
     }
@@ -254,6 +274,7 @@ static NSString *kReuseIdentifier = @"UserIndentifier";
     
     [tab removeFromSuperview];
     
+    _tabWidth = self.bounds.size.width /(self.numberOfTabs+1);
     NSInteger tabIndex = 0;
     for (BrowserTab *tab in _tabsArray) {
         
@@ -265,7 +286,7 @@ static NSString *kReuseIdentifier = @"UserIndentifier";
     
     [self caculateFrame];
     
-    [ self setSelectedTabIndex:newIndex animated:animated];
+    [ self setSelectedTabIndex:newIndex animated:NO];
     
     if ([self.delegate respondsToSelector:@selector(BrowserTabView:didRemoveTabAtIndex:)]) {
         [self.delegate BrowserTabView:self didRemoveTabAtIndex:index];
@@ -301,7 +322,7 @@ static NSString *kReuseIdentifier = @"UserIndentifier";
 - (void)handlePanGuesture:(UIPanGestureRecognizer *)sender {
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////
 	//// The following algorithm for handling panguesture inspired from  https://github.com/graetzer/SGTabs
-        //////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////
     BrowserTab *panTab = (BrowserTab *)sender.view;
     NSUInteger panPosition = [self.tabsArray indexOfObject:panTab];
     
@@ -337,13 +358,13 @@ static NSString *kReuseIdentifier = @"UserIndentifier";
                         }
                     }
                     
-                    [UIView animateWithDuration:0.3 animations:^{ 
+                    [UIView animateWithDuration:0.3 animations:^{
                         nextTab.frame = CGRectMake(width*panPosition + 5, 0, width, self.bounds.size.height - 5);
                         
                         if ([self.delegate respondsToSelector:@selector(BrowserTabView:exchangeTabAtIndex:withTabAtIndex:)]) {
                             [self.delegate BrowserTabView:self exchangeTabAtIndex:panPosition withTabAtIndex:nextPos];
                         }
-                                
+                        
                     }];
                 }
             }
