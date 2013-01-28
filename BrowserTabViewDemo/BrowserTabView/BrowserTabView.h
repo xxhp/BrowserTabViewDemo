@@ -52,7 +52,6 @@
 @property (nonatomic, readonly) NSUInteger numberOfTabs;
 @property (nonatomic, readonly) NSInteger selectedTabIndex;
 
-@property (nonatomic, assign) CGFloat tabWidth;
 @property (nonatomic, readonly) NSMutableArray *reuseQueue;
 @property (nonatomic, weak) id<BrowserTabViewDelegate> delegate;
 

@@ -58,15 +58,15 @@
         reuseIdentifier = aReuseIdentifier;
         self.normalTitleColor = [UIColor whiteColor];
         self.selectedTitleColor = [UIColor blackColor];
-        self.tabSelectedImage = [[UIImage imageNamed:@"tab_selected"] stretchableImageWithLeftCapWidth:40 topCapHeight:0];
-        self.tabNormalImage = [[UIImage imageNamed:@"tab_normal"] stretchableImageWithLeftCapWidth:40 topCapHeight:0] ;
+        self.tabSelectedImage = [[UIImage imageNamed:@"tab_selected"] stretchableImageWithLeftCapWidth:30 topCapHeight:0];
+        self.tabNormalImage = [[UIImage imageNamed:@"tab_normal"] stretchableImageWithLeftCapWidth:30 topCapHeight:0] ;
         
         self.titleFont = [UIFont systemFontOfSize:16];
         
         _imageView = [[UIImageView alloc] initWithFrame:self.bounds];
-        
+        _imageView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         self.imageView.backgroundColor = [UIColor clearColor];
-        
+    
         self.backgroundColor = [UIColor clearColor];
         
         [self addSubview:_imageView];
@@ -75,12 +75,13 @@
         _titleField.textAlignment = UITextAlignmentCenter;
         _titleField.enabled = NO;
         _titleField.delegate = _delegate;
+        _titleField.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         _titleField.returnKeyType = UIReturnKeyDone;
         
         self.titleField.backgroundColor = [UIColor clearColor];
         
         _closeButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        [_closeButton setImage:[UIImage imageNamed:@"tab_close.png"] forState:UIControlStateNormal];
+        [_closeButton setImage:[UIImage imageNamed:@"tab_close"] forState:UIControlStateNormal];
         _closeButton.hidden = YES;
         [_closeButton addTarget:self action:@selector(onCloseTap:) forControlEvents:UIControlEventTouchUpInside];
         
@@ -143,7 +144,11 @@
     CGSize titleSize = [_title sizeWithFont:_titleFont];
     titleSize.width = CGRectGetWidth(self.bounds) - 30;
     _imageView.frame = self.bounds;
-    self.titleField.frame = CGRectMake((self.bounds.size.width - titleSize.width)/2 , (self.bounds.size.height - titleSize.height)/2, titleSize.width,titleSize.height);
+    self.titleField.center = self.center;
+    self.titleField.frame = CGRectMake((self.bounds.size.width - (titleSize.width - 44))/2,
+                                       (self.bounds.size.height - titleSize.height)/2,
+                                       titleSize.width - 44,
+                                       titleSize.height);
     _closeButton.frame =  CGRectMake(CGRectGetMaxX(self.bounds) - 50, 0, 44, 44);
     [super layoutSubviews];
 }
